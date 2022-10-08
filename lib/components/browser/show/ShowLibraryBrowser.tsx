@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ButtonLink } from "../../ButtonLink";
-import {ServerRoutes} from "@rewind-media/rewind-protocol";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { useParams } from "react-router";
 import { SeriesLoader } from "../../loader/show/SeriesLoader";
-import {PropsWithSocket} from "../../../models";
+import { PropsWithSocket } from "../../../models";
+import { Box, Grid, Typography } from "@mui/material";
 
 export interface ShowLibraryBrowserProps extends PropsWithSocket {}
 
@@ -15,20 +16,48 @@ export function ShowLibraryBrowser(props: ShowLibraryBrowserProps) {
     <SeriesLoader
       libraryId={library}
       onLoad={(shows) => (
-        <>
-          {shows.map((showInfo) => {
-            return (
-              <ButtonLink
-                key={showInfo.id}
-                to={ServerRoutes.Web.Home.Browser.Shows.formatShowRoute(
-                  showInfo.id
-                )}
-              >
-                {showInfo.showName}
-              </ButtonLink>
-            );
-          })}
-        </>
+        <Grid container direction={"row"} key={`SeriesContainer-${library}`}>
+          {shows
+            .sort((a, b) => a.showName.localeCompare(b.showName))
+            .map((showEpisodeInfo) => {
+              return (
+                <Grid
+                  item
+                  key={`SeriesContainer-${showEpisodeInfo.id}`}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  xl={2}
+                >
+                  <ButtonLink
+                    key={showEpisodeInfo.id}
+                    to={ServerRoutes.Web.Home.Browser.Shows.formatShowRoute(
+                      showEpisodeInfo.id
+                    )}
+                    sx={{ width: "100%" }}
+                  >
+                    <Box sx={{ width: "100%" }}>
+                      <img
+                        src={
+                          showEpisodeInfo.seriesImageId
+                            ? ServerRoutes.Api.Image.formatImagePath(
+                                showEpisodeInfo.seriesImageId
+                              )
+                            : "" // TODO add default image
+                        }
+                        style={{ width: "100%" }}
+                        alt={showEpisodeInfo.showName}
+                      ></img>{" "}
+                      <Typography align={"center"}>
+                        {showEpisodeInfo.showName}
+                      </Typography>
+                    </Box>
+                  </ButtonLink>
+                </Grid>
+              );
+            })}
+        </Grid>
       )}
       socket={props.socket}
     />
