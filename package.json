@@ -56,10 +56,10 @@
     "clean": "rm -rf dist webpack",
     "_build": "tsc --jsx react",
     "_copy": "cp -r lib/static/ dist/static",
-    "webpack": "webpack  --config webpack.config.js",
+    "webpack": "webpack --config webpack.config.js",
     "build": "npm run _build && npm run _copy && npm run webpack",
     "build-and-run": "npm run build && npm run start",
-    "pub": "npm version patch && npm publish"
+    "pub": "npm run clean && npm run build && npm version patch && npm publish"
   },
   "eslintConfig": {
     "extends": [
