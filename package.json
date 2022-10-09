@@ -18,7 +18,7 @@
     "@mui/lab": "^5.0.0-alpha.93",
     "@mui/material": "^5.10.8",
     "@mui/x-data-grid": "^5.17.6",
-    "@rewind-media/rewind-protocol": "^0.1.8",
+    "@rewind-media/rewind-protocol": "^0.1.10",
     "@svgr/webpack": "^6.4.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -54,7 +54,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist webpack",
-    "update": "npm update --save && git add package.json && git commit -m 'Dependency updates'",
+    "update": "npm update --save && ((! git diff --exit-code package.json > /dev/null && git add package.json && git commit -m 'Dependency updates') || true)",
     "prettier": "npx prettier --write .",
     "_build": "tsc --jsx react",
     "_copy": "cp -r lib/static/ dist/static",
