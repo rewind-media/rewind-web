@@ -1,10 +1,10 @@
 import React from "react";
 import { ButtonLink } from "../../ButtonLink";
-import {ServerRoutes} from "@rewind-media/rewind-protocol";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { useParams } from "react-router";
 import { SeasonsLoader } from "../../loader/show/SeasonsLoader";
 import { Box, Grid, Typography } from "@mui/material";
-import {PropsWithSocket} from "../../../models";
+import { PropsWithSocket } from "../../../models";
 
 export interface ShowBrowserProps extends PropsWithSocket {}
 

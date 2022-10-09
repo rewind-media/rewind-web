@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {SocketClient} from "../../../models";
+import { SocketClient } from "../../../models";
 
 export interface UserAdminSettingsProps {
   socket: SocketClient;

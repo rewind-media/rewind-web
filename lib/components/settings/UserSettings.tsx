@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {SocketClient} from "../../models";
+import { SocketClient } from "../../models";
 
 interface UserSettingsProps {
   socket: SocketClient;

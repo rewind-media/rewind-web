@@ -1,8 +1,8 @@
 import { ButtonLink } from "../../ButtonLink";
-import {SeriesInfo, ServerRoutes} from "@rewind-media/rewind-protocol";
+import { SeriesInfo, ServerRoutes } from "@rewind-media/rewind-protocol";
 import { Loading } from "../../Loading";
 import React, { ReactElement, useEffect, useState } from "react";
-import {PropsWithSocket} from "../../../models";
+import { PropsWithSocket } from "../../../models";
 
 export interface ShowLibraryLoaderProps extends PropsWithSocket {
   libraryId: string;

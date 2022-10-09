@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import {ServerRoutes} from "@rewind-media/rewind-protocol";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 export function Login() {
   const [username, setUsername] = useState("");

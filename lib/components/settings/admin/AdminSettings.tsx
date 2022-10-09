@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { ButtonLink } from "../../ButtonLink";
-import {ServerRoutes} from "@rewind-media/rewind-protocol";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { Outlet } from "react-router-dom";
 
 export function AdminSettings() {

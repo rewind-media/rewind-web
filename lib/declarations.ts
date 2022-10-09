@@ -1,4 +1,4 @@
-import {ClientUser} from "@rewind-media/rewind-protocol";
+import { ClientUser } from "@rewind-media/rewind-protocol";
 import React from "react";
 
 declare global {

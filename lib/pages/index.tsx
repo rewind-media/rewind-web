@@ -19,9 +19,9 @@ import { ShowLibraryBrowser } from "../components/browser/show/ShowLibraryBrowse
 import { ShowSeasonBrowser } from "../components/browser/show/ShowSeasonBrowser";
 import { ShowSeriesBrowser } from "../components/browser/show/ShowSeriesBrowser";
 import { ShowEpisodeBrowser } from "../components/browser/show/ShowEpisodeBrowser";
-import {WebLog} from "../log";
-import {SocketClient} from "../models";
-import {ServerRoutes} from "@rewind-media/rewind-protocol";
+import { WebLog } from "../log";
+import { SocketClient } from "../models";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 export interface IndexProps {
   io: SocketClient;

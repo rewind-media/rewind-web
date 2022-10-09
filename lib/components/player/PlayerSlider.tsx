@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { SizeMe } from "react-sizeme";
 import { LinearProgress } from "@mui/material";
-import {WebLog} from "../../log";
+import { WebLog } from "../../log";
 
 const log = WebLog.getChildCategory("PlayerSlider");
 

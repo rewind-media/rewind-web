@@ -1,7 +1,7 @@
 import React from "react";
 import ReactPlayer from "react-player";
-import {WebLog} from "../../log";
-import {HlsStreamProps} from "@rewind-media/rewind-protocol";
+import { WebLog } from "../../log";
+import { HlsStreamProps } from "@rewind-media/rewind-protocol";
 
 const log = WebLog.getChildCategory("Pla");
 

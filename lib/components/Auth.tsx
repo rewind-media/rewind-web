@@ -1,8 +1,8 @@
 import React, { PropsWithChildren, useState } from "react";
 import { Navigate } from "react-router";
 import { CircularProgress } from "@mui/material";
-import {WebLog} from "../log";
-import {ServerRoutes} from "@rewind-media/rewind-protocol";
+import { WebLog } from "../log";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 interface AuthProps extends PropsWithChildren {}
 

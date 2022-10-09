@@ -2,8 +2,8 @@ import React, { PropsWithChildren } from "react";
 import { ButtonLink } from "../ButtonLink";
 import { Box, Container, Typography } from "@mui/material";
 import { UserContext } from "../Auth";
-import {ServerRoutes} from "@rewind-media/rewind-protocol";
-import "../../declarations"
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
+import "../../declarations";
 
 export interface SettingsProps extends PropsWithChildren {}
 

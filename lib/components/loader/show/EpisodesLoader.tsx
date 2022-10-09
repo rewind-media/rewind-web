@@ -1,6 +1,6 @@
 import { Loading } from "../../Loading";
 import React, { ReactElement, useEffect, useState } from "react";
-import {PropsWithSocket} from "../../../models";
+import { PropsWithSocket } from "../../../models";
 import { ShowEpisodeInfo } from "@rewind-media/rewind-protocol";
 
 export interface EpisodesLoaderProps extends PropsWithSocket {

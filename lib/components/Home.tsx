@@ -1,10 +1,13 @@
-import {Library, LibraryType, ServerRoutes} from "@rewind-media/rewind-protocol";
+import {
+  Library,
+  LibraryType,
+  ServerRoutes,
+} from "@rewind-media/rewind-protocol";
 import React, { useEffect, useState } from "react";
 import { ButtonLink } from "./ButtonLink";
-import {PropsWithSocket} from "../models";
+import { PropsWithSocket } from "../models";
 
-interface HomeProps extends PropsWithSocket {
-}
+interface HomeProps extends PropsWithSocket {}
 
 export function Home(props: HomeProps) {
   const [libraries, setLibraries] = useState<Library[]>([]);
