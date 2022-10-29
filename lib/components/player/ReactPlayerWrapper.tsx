@@ -41,11 +41,12 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
           },
         },
       }}
-      onError={(e) => {
+      onError={(e, data) => {
         log.error(
+          e,
           `Monitor ${
             props.hlsStreamProps.id
-          } encountered error: ${JSON.stringify(e)}`
+          } encountered error: ${JSON.stringify(data)}`
         );
 
         props.onReloadStream();
