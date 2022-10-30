@@ -17,10 +17,10 @@ export function Loading<T>(props: LoadingProps<T>): ReactElement {
       setWaitOnce(true);
       props.onWaitOnce();
     }
-    if (!props.waitFor && props.onWait) {
+    if (props.waitFor == undefined && props.onWait) {
       props.onWait();
     }
-    if (props.waitFor && props.onRender) {
+    if (props.waitFor !== undefined && props.onRender) {
       props.onRender();
     }
   }, [props.waitFor]);
