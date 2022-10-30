@@ -122,12 +122,7 @@ function Index(props: IndexProps) {
               </Route>
               <Route
                 path={ServerRoutes.Web.Home.player}
-                element={
-                  <MediaPlayer
-                    socket={props.io}
-                    backButtonPath={ServerRoutes.root}
-                  />
-                }
+                element={<MediaPlayer socket={props.io} />}
               />
 
               <Route element={<Typography>Homepage</Typography>} />
