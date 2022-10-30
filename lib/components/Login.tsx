@@ -3,6 +3,7 @@ import {
   Button,
   FormControlLabel,
   FormGroup,
+  Grid,
   TextField,
   Typography,
 } from "@mui/material";
@@ -41,47 +42,62 @@ export function Login() {
   }
 
   return (
-    <Box>
-      {error ? <Typography color="red">{error}</Typography> : <></>}
-      <form
-        action="lib/components/Login"
-        method="post"
-        onSubmit={(e) => {
-          submit();
-          e.preventDefault();
-          return false;
+    <Grid
+      container
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        width: "100%",
+        height: "100vh",
+      }}
+    >
+      <Grid
+        item
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          width: "100%",
+          height: "100%",
         }}
       >
-        <FormGroup>
-          <FormControlLabel
-            control={
+        <Grid item>
+          {error ? <Typography color="red">{error}</Typography> : <></>}
+          <form
+            action="lib/components/Login"
+            method="post"
+            onSubmit={(e) => {
+              submit();
+              e.preventDefault();
+              return false;
+            }}
+          >
+            <FormGroup>
               <TextField
                 id="username"
                 name="username"
                 type="text"
                 autoComplete="username"
+                helperText="Username"
                 required
                 onChange={(it) => setUsername(it.target.value)}
               />
-            }
-            label={"Username"}
-          />
-          <FormControlLabel
-            control={
               <TextField
                 id="password"
                 name="password"
                 type="password"
+                helperText="Password"
                 autoComplete="password"
                 required
                 onChange={(it) => setPassword(it.target.value)}
               />
-            }
-            label={"Password"}
-          />
-          <Button type="submit">Sign in</Button>
-        </FormGroup>
-      </form>
-    </Box>
+              <Button type="submit">Sign in</Button>
+            </FormGroup>
+          </form>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
