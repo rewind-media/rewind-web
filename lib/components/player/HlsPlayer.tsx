@@ -15,6 +15,7 @@ export interface HlsPlayerProps extends PropsWithSocket {
   readonly hlsStreamProps: HlsStreamProps;
   readonly onReloadStream?: (wanted: number) => void;
   readonly onUnmount?: () => void;
+  readonly onEnded?: () => void;
 }
 
 const log = WebLog.getChildCategory("StreamPlayer");
@@ -56,6 +57,7 @@ export const HlsPlayer = (props: HlsPlayerProps) => {
           // If we're within a second of the end of the buffer...
           setDesiredReloadTimestamp(props.hlsStreamProps.startOffset + played);
       }}
+      onEnded={props.onEnded}
     ></ReactPlayerWrapper>
   );
 

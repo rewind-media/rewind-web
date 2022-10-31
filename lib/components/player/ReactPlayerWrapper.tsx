@@ -13,6 +13,7 @@ export interface PlayerWrapperProps {
   onPlayed: (played: number) => void;
   onBuffered: (buffered: number) => void;
   onReloadStream: () => void;
+  onEnded?: () => void;
 }
 
 export function ReactPlayerWrapper(props: PlayerWrapperProps) {
@@ -24,6 +25,7 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
       playing={props.playing}
       width={"100vw"}
       height={"100vh"}
+      loop={false}
       style={{
         margin: "0px",
         cursor: props.openControls ? "default" : "none",
@@ -67,12 +69,7 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
         props.onPlayed(state.playedSeconds);
         props.onBuffered(state.loadedSeconds);
       }}
-      //TODO make this work
-      // onBufferEnd={() => {
-      //     if(buffered === (props.clientStreamProps.duration - props.clientStreamProps.startOffset)) {
-      //         props.socket.emit("cancelStream", props.clientStreamProps.id)
-      //     }
-      // }}
+      onEnded={() => (props.onEnded ? props.onEnded() : undefined)}
     />
   );
 }
