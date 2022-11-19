@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { ButtonLink } from "../../ButtonLink";
-import { ServerRoutes, ShowEpisodeInfo } from "@rewind-media/rewind-protocol";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { useParams } from "react-router";
 import { EpisodesLoader } from "../../loader/show/EpisodesLoader";
 import { PropsWithSocket } from "../../../models";

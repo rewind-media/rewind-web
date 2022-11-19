@@ -11,6 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import { SocketClient } from "../../../models";
+import { HttpClient as HttpClient } from "@rewind-media/rewind-protocol/dist/client";
+import { ClientUser, UserPermissions } from "@rewind-media/rewind-protocol";
 
 export interface UserAdminSettingsProps {
   socket: SocketClient;
@@ -19,12 +21,36 @@ export interface UserAdminSettingsProps {
 const columns: GridColDef[] = [
   { field: "username", headerName: "Username" },
   {
-    field: "permissions.isAdmin",
+    field: "permissions",
     headerName: "Admin",
-    valueGetter: (row: GridValueGetterParams<Express.User>) =>
-      row.value?.permissions?.isAdmin ? "true" : "false",
+    valueGetter: (row: GridValueGetterParams<UserPermissions>) =>
+      row.value?.isAdmin ? "true" : "false",
   },
 ];
+
+interface DeleteUserDialogProps {
+  open: boolean;
+  onClose: () => void;
+  selectedIds: string[];
+}
+
+function DeleteUserDialog(props: DeleteUserDialogProps) {
+  return (
+    <Dialog open={props.open} onClose={props.onClose}>
+      <Typography color="red">{`Delete ${props.selectedIds.length} users?`}</Typography>
+      <Button
+        onClick={() =>
+          HttpClient.deleteUsers({ usernames: props.selectedIds }).then(() =>
+            props.onClose()
+          )
+        }
+      >
+        Confirm
+      </Button>
+      <Button onClick={() => props.onClose()}>Cancel</Button>
+    </Dialog>
+  );
+}
 
 export function UserAdminSettings(props: UserAdminSettingsProps) {
   const [users, setUsers] = useState<Express.User[]>([]);
@@ -32,16 +58,12 @@ export function UserAdminSettings(props: UserAdminSettingsProps) {
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false);
   const [deleteUsersDialogOpen, setDeleteUsersDialogOpen] = useState(false);
 
+  const fetchUsers = () =>
+    HttpClient.listUsers().then((it) => setUsers(it.users));
+
   useEffect(() => {
-    props.socket.on("getUsersCallback", (response) => {
-      setUsers(response.users);
-    });
-    props.socket.on("deleteUsersCallback", (res) => {
-      setDeleteUsersDialogOpen(false);
-      props.socket.emit("listUsers");
-    });
-    props.socket.emit("listUsers");
-  }, []);
+    fetchUsers();
+  }, [createUserDialogOpen, deleteUsersDialogOpen]);
 
   return (
     <>
@@ -49,21 +71,15 @@ export function UserAdminSettings(props: UserAdminSettingsProps) {
         open={createUserDialogOpen}
         onComplete={() => {
           setCreateUserDialogOpen(false);
-          props.socket.emit("listUsers");
+          HttpClient.listUsers().then((it) => setUsers(it.users));
         }}
         socket={props.socket}
       />
-      <Dialog open={deleteUsersDialogOpen}>
-        <Typography color="red">{`Delete ${selectedIds.length} users?`}</Typography>
-        <Button
-          onClick={() => {
-            props.socket.emit("deleteUsers", { usernames: selectedIds });
-          }}
-        >
-          Confirm
-        </Button>
-        <Button onClick={() => setDeleteUsersDialogOpen(false)}>Cancel</Button>
-      </Dialog>
+      <DeleteUserDialog
+        open={deleteUsersDialogOpen}
+        onClose={() => setDeleteUsersDialogOpen(false)}
+        selectedIds={selectedIds}
+      />
       <ButtonGroup>
         <Button onClick={() => setCreateUserDialogOpen(true)}>Create</Button>
         {/*<Button disabled={selectedIds.length != 1}>Modify</Button>*/}
@@ -115,14 +131,6 @@ function CreateUserDialog(props: CreateUserDialogProps) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [complete, setComplete] = useState(false);
 
-  props.socket.on("createUserCallback", (res) => {
-    if (res.created) {
-      setComplete(true);
-    } else {
-      setError("Error");
-    }
-  });
-
   useEffect(() => {
     setError(undefined);
     setUsername("");
@@ -135,18 +143,10 @@ function CreateUserDialog(props: CreateUserDialogProps) {
     }
   }, [complete, props.open]);
 
-  useEffect(() => {
-    props.socket.on("createUserCallback", (res) => {
-      if (res.created) {
-        setComplete(true);
-      }
-    });
-  });
-
   const valid = validate(username, password, verifyPassword, isAdmin);
 
   return (
-    <Dialog open={props.open}>
+    <Dialog open={props.open} onClose={() => setComplete(true)}>
       <FormGroup>
         {error ? <Typography color="red">{error}</Typography> : <></>}
         <FormControlLabel
@@ -178,18 +178,23 @@ function CreateUserDialog(props: CreateUserDialogProps) {
         />
         <Button
           disabled={!valid}
-          onClick={() => {
-            props.socket.emit("createUser", {
-              username: username,
-              password: password,
-              permissions: {
-                isAdmin: isAdmin,
+          onClick={() =>
+            HttpClient.createUser({
+              user: {
+                username: username,
+                permissions: {
+                  isAdmin: isAdmin,
+                },
               },
-            });
-          }}
+              password: password,
+            }).then(async (it: Response) =>
+              it.ok ? props.onComplete() : setError(await it.text())
+            )
+          }
         >
           Submit
         </Button>
+        <Button onClick={() => setComplete(true)}>Close</Button>
       </FormGroup>
     </Dialog>
   );

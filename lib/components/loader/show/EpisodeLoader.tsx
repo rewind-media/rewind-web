@@ -1,31 +1,26 @@
 import { Loading } from "../../Loading";
 import React, { ReactElement, useEffect, useState } from "react";
 import { PropsWithSocket } from "../../../models";
-import { ShowEpisodeInfo } from "@rewind-media/rewind-protocol";
+import { EpisodeInfo, HttpClient } from "@rewind-media/rewind-protocol";
 
 export interface EpisodeLoaderProps extends PropsWithSocket {
   episodeId: string;
-  onLoad: (episodeInfo: ShowEpisodeInfo) => ReactElement;
+  onLoad: (episodeInfo: EpisodeInfo) => ReactElement;
   onError?: () => void;
 }
 
 export function EpisodeLoader(props: EpisodeLoaderProps) {
-  const [episodeInfo, setEpisodeInfo] = useState<ShowEpisodeInfo>();
+  const [episodeInfo, setEpisodeInfo] = useState<EpisodeInfo>();
 
   useEffect(() => {
-    props.socket.on("getShowEpisodeCallback", (res) => {
-      setEpisodeInfo(res.episode);
-    });
-  });
+    HttpClient.getEpisode(props.episodeId).then((it) =>
+      setEpisodeInfo(it.episode)
+    );
+  }, []);
 
   return (
     <Loading
       waitFor={episodeInfo}
-      onWaitOnce={() => {
-        props.socket.emit("getShowEpisode", {
-          episode: props.episodeId,
-        });
-      }}
       render={(it) =>
         it ? props.onLoad(it) : (props.onError && props.onError()) || <></>
       }

@@ -9,8 +9,9 @@ import { PropsWithSocket } from "../../models";
 import {
   HlsStreamProps,
   ServerRoutes,
-  ShowEpisodeInfo,
-  ShowSeasonInfo,
+  EpisodeInfo,
+  SeasonInfo,
+  HttpClient,
 } from "@rewind-media/rewind-protocol";
 import formatPlayerRoute = ServerRoutes.Web.Home.formatPlayerRoute;
 import naturalCompare from "string-natural-compare";
@@ -70,106 +71,53 @@ function MediaPlayer(props: MediaPlayerProps) {
                 // props.socket.emit("cancelStream");
               }}
               // TODO pull this ugly mess out
-              onEnded={() => {
+              onEnded={async () => {
                 const fail = () => {
                   nav(ServerRoutes.Web.Home.Browser.root);
                 };
-                props.socket.once(
-                  "getShowEpisodeCallback",
-                  ({ episode: currEpisode }) => {
-                    if (currEpisode) {
-                      props.socket.once("listShowEpisodesCallback", (res) => {
-                        const sortedEpisodes =
-                          res.episodes.sort(episodeComparator);
-                        log.info(
-                          `Sorted episodes :${JSON.stringify(
-                            sortedEpisodes.map((it) => {
-                              return {
-                                name: it.name,
-                                episode: it.details?.episode,
-                              };
-                            })
-                          )}`
-                        );
-                        const curEpIndex = sortedEpisodes.findIndex(
-                          (it) => it.id == currEpisode.id
-                        );
-                        const nextEpisode =
-                          curEpIndex !== -1
-                            ? sortedEpisodes[curEpIndex + 1]
-                            : undefined;
-                        if (nextEpisode) {
-                          log.info(
-                            `Found next episode ${JSON.stringify(nextEpisode)}`
-                          );
-                          goToNextEpisode(
-                            t.mediaInfo.libraryName,
-                            nextEpisode.id
-                          );
-                        } else {
-                          props.socket.once(
-                            "listShowSeasonsCallback",
-                            ({ seasons: seasons }) => {
-                              const sortedSeasons =
-                                seasons.sort(seasonComparator);
-                              log.info(
-                                `Sorted seasons :${JSON.stringify(
-                                  sortedSeasons.map((it) => {
-                                    return {
-                                      name: it.seasonName,
-                                      episode: it.details?.seasonnumber,
-                                    };
-                                  })
-                                )}`
-                              );
-                              const currSeasonIndex = sortedSeasons.findIndex(
-                                (value) => value.id == currEpisode.seasonId
-                              );
-                              const nextSeason =
-                                currSeasonIndex !== -1
-                                  ? sortedSeasons[currSeasonIndex + 1]
-                                  : undefined;
-                              if (nextSeason) {
-                                props.socket.once(
-                                  "listShowEpisodesCallback",
-                                  ({ episodes: episodes }) => {
-                                    const nextSeasonFirstEp = episodes
-                                      .sort(episodeComparator)
-                                      .at(0);
-                                    if (nextSeasonFirstEp) {
-                                      goToNextEpisode(
-                                        nextSeasonFirstEp.libraryName,
-                                        nextSeasonFirstEp.id
-                                      );
-                                    } else {
-                                      fail();
-                                    }
-                                  }
-                                );
-                                props.socket.emit("listShowEpisodes", {
-                                  season: nextSeason.id,
-                                });
-                              } else {
-                                fail();
-                              }
-                            }
-                          );
-                          props.socket.emit("listShowSeasons", {
-                            show: currEpisode.showId,
-                          });
-                        }
-                      });
-                      props.socket.emit("listShowEpisodes", {
-                        season: currEpisode.seasonId,
-                      });
-                    } else {
-                      fail();
-                    }
-                  }
+                const currEpisode = (
+                  await HttpClient.getEpisode(t.mediaInfo.id)
+                ).episode;
+                const currSeasonEpisodes = (
+                  await HttpClient.listEpisodes(currEpisode.seasonId)
+                ).episodes.sort(episodeComparator);
+                const curEpIndex = currSeasonEpisodes.findIndex(
+                  (it) => it.id == currEpisode.id
                 );
-                props.socket.emit("getShowEpisode", {
-                  episode: t.mediaInfo.id,
-                });
+                const nextEpisode =
+                  curEpIndex !== -1
+                    ? currSeasonEpisodes[curEpIndex + 1]
+                    : undefined;
+
+                if (nextEpisode) {
+                  log.info(`Found next episode ${JSON.stringify(nextEpisode)}`);
+                  goToNextEpisode(t.mediaInfo.libraryName, nextEpisode.id);
+                } else {
+                  const seasons = (
+                    await HttpClient.listSeasons(currEpisode.showId)
+                  ).seasons.sort(seasonComparator);
+                  const currSeasonIndex = seasons.findIndex(
+                    (value) => value.id == currEpisode.seasonId
+                  );
+                  const nextSeason =
+                    currSeasonIndex !== -1
+                      ? seasons[currSeasonIndex + 1]
+                      : undefined;
+                  const nextSeasonFirstEpisode = nextSeason
+                    ? (await HttpClient.listEpisodes(nextSeason.id)).episodes
+                        .sort(episodeComparator)
+                        .at(0)
+                    : undefined;
+
+                  if (nextSeasonFirstEpisode) {
+                    goToNextEpisode(
+                      t.mediaInfo.libraryName,
+                      nextSeasonFirstEpisode.id
+                    );
+                  } else {
+                    fail();
+                  }
+                }
               }}
             />
           )}
@@ -190,7 +138,7 @@ function MediaPlayer(props: MediaPlayerProps) {
   );
 }
 
-const episodeComparator = (a: ShowEpisodeInfo, b: ShowEpisodeInfo) => {
+const episodeComparator = (a: EpisodeInfo, b: EpisodeInfo) => {
   return (a.details?.episode ?? 0) - (b.details?.episode ?? 0);
 
   // if (b.details?.episode && a.details?.episode) {
@@ -199,7 +147,7 @@ const episodeComparator = (a: ShowEpisodeInfo, b: ShowEpisodeInfo) => {
   //   return naturalCompare(a.name, b.name);
   // }
 };
-const seasonComparator = (a: ShowSeasonInfo, b: ShowSeasonInfo) => {
+const seasonComparator = (a: SeasonInfo, b: SeasonInfo) => {
   return (a.details?.seasonnumber ?? 0) - (b.details?.seasonnumber ?? 0);
 
   // if (b.details?.seasonnumber && a.details?.seasonnumber) {

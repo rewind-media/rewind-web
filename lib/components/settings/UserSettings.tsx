@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { SocketClient } from "../../models";
+import { HttpClient } from "@rewind-media/rewind-protocol";
 
 interface UserSettingsProps {
   socket: SocketClient;
@@ -57,14 +58,6 @@ function ChangePasswordDialog(props: ChangePasswordDialogProps) {
   const [verifyNewPassword, setVerifyNewPassword] = useState("");
   const [complete, setComplete] = useState(false);
 
-  props.socket.on("changePasswordCallback", (res) => {
-    if (res.success) {
-      setComplete(true);
-    } else {
-      setError("Error");
-    }
-  });
-
   useEffect(() => {
     setError(undefined);
     setCurrentPassword("");
@@ -75,14 +68,6 @@ function ChangePasswordDialog(props: ChangePasswordDialogProps) {
       props.onComplete();
     }
   }, [complete, props.open]);
-
-  useEffect(() => {
-    props.socket.on("createUserCallback", (res) => {
-      if (res.created) {
-        setComplete(true);
-      }
-    });
-  });
 
   const valid = validate(currentPassword, newPassword, verifyNewPassword);
 
@@ -113,9 +98,15 @@ function ChangePasswordDialog(props: ChangePasswordDialogProps) {
         <Button
           disabled={!valid}
           onClick={() => {
-            props.socket.emit("changePassword", {
+            HttpClient.changePassword({
               oldPassword: currentPassword,
               newPassword: newPassword,
+            }).then((res) => {
+              if (res.status == 200) {
+                setComplete(true);
+              } else {
+                setError("Error");
+              }
             });
           }}
         >

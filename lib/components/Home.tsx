@@ -1,4 +1,5 @@
 import {
+  HttpClient,
   Library,
   LibraryType,
   ServerRoutes,
@@ -13,10 +14,7 @@ export function Home(props: HomeProps) {
   const [libraries, setLibraries] = useState<Library[]>([]);
 
   useEffect(() => {
-    props.socket.on("listLibrariesCallback", (res) => {
-      setLibraries(res.libraries);
-    });
-    props.socket.emit("listLibrariesRequest");
+    HttpClient.listLibraries().then((it) => setLibraries(it.libraries));
   }, []);
 
   const routes = libraries.map((lib) => {

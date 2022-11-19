@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ButtonLink } from "../../ButtonLink";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { useParams } from "react-router";
-import { SeriesLoader } from "../../loader/show/SeriesLoader";
+import { ShowsLoader } from "../../loader/show/ShowsLoader";
 import { PropsWithSocket } from "../../../models";
 import { Box, Grid, Typography } from "@mui/material";
 
@@ -13,7 +13,7 @@ export function ShowLibraryBrowser(props: ShowLibraryBrowserProps) {
   if (!library) return <></>;
 
   return (
-    <SeriesLoader
+    <ShowsLoader
       libraryId={library}
       onLoad={(shows) => (
         <Grid container direction={"row"} key={`SeriesContainer-${library}`}>
