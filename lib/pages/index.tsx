@@ -40,10 +40,6 @@ function Index(props: IndexProps) {
             </Root>
           }
         >
-          <Route
-            index={true}
-            element={<Navigate to={ServerRoutes.Web.Private.Browse.home} />}
-          />
           <Route path={ServerRoutes.Web.Auth.login} element={<Login />} />
           <Route
             path={ServerRoutes.Web.Private.root}
