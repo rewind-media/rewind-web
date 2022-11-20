@@ -32,7 +32,7 @@ export function Auth(props: AuthProps) {
   return user ? (
     <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
   ) : authFailed ? (
-    <Navigate to={ServerRoutes.Web.login} />
+    <Navigate to={ServerRoutes.Web.Auth.login} />
   ) : (
     <CircularProgress />
   );

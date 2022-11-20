@@ -6,11 +6,8 @@ import {
 } from "@rewind-media/rewind-protocol";
 import React, { useEffect, useState } from "react";
 import { ButtonLink } from "./ButtonLink";
-import { PropsWithSocket } from "../models";
 
-interface HomeProps extends PropsWithSocket {}
-
-export function Home(props: HomeProps) {
+export function Home() {
   const [libraries, setLibraries] = useState<Library[]>([]);
 
   useEffect(() => {
@@ -24,7 +21,9 @@ export function Home(props: HomeProps) {
       case LibraryType.Image:
         return ""; // TODO
       case LibraryType.Show:
-        return ServerRoutes.Web.Home.Browser.Shows.formatLibraryRoot(lib.name);
+        return ServerRoutes.Web.Private.Browse.Library.formatShowRoute(
+          lib.name
+        );
     }
   });
 

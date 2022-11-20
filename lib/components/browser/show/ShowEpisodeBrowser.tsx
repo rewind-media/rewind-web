@@ -20,7 +20,7 @@ export function ShowEpisodeBrowser(props: ShowSeasonEpisodeBrowserProps) {
           <>
             <Typography>{episode?.name}</Typography>
             <ButtonLink
-              to={ServerRoutes.Web.Home.formatPlayerRoute(
+              to={ServerRoutes.Web.Private.View.formatPlayerRoute(
                 episode?.libraryName,
                 episode.id
               )}

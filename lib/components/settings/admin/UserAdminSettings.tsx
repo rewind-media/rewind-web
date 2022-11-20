@@ -11,8 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { SocketClient } from "../../../models";
-import { HttpClient as HttpClient } from "@rewind-media/rewind-protocol/dist/client";
-import { ClientUser, UserPermissions } from "@rewind-media/rewind-protocol";
+import { HttpClient, UserPermissions } from "@rewind-media/rewind-protocol";
 
 export interface UserAdminSettingsProps {
   socket: SocketClient;

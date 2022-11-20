@@ -13,8 +13,6 @@ import {
   SeasonInfo,
   HttpClient,
 } from "@rewind-media/rewind-protocol";
-import formatPlayerRoute = ServerRoutes.Web.Home.formatPlayerRoute;
-import naturalCompare from "string-natural-compare";
 
 interface MediaPlayerProps extends PropsWithSocket {
   readonly onBackButton?: () => void;
@@ -32,7 +30,9 @@ function MediaPlayer(props: MediaPlayerProps) {
   const goToNextEpisode = (libName: string, episodeId: string) => {
     if (libName !== library || id !== episodeId) {
       setClientStreamProps(undefined);
-      nav(formatPlayerRoute(libName, episodeId), { replace: true });
+      nav(ServerRoutes.Web.Private.View.formatPlayerRoute(libName, episodeId), {
+        replace: true,
+      });
     }
   };
 
@@ -73,7 +73,7 @@ function MediaPlayer(props: MediaPlayerProps) {
               // TODO pull this ugly mess out
               onEnded={async () => {
                 const fail = () => {
-                  nav(ServerRoutes.Web.Home.Browser.root);
+                  nav(ServerRoutes.Web.Private.Browse.home);
                 };
                 const currEpisode = (
                   await HttpClient.getEpisode(t.mediaInfo.id)

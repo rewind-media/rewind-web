@@ -34,7 +34,7 @@ export function ShowSeasonBrowser(props: ShowSeasonBrowserProps) {
                   >
                     <ButtonLink
                       key={showEpisodeInfo.id}
-                      to={ServerRoutes.Web.Home.Browser.Shows.formatEpisodeRoute(
+                      to={ServerRoutes.Web.Private.Browse.formatEpisodeRoute(
                         showEpisodeInfo.id
                       )}
                       sx={{ width: "100%" }}

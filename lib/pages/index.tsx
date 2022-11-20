@@ -1,6 +1,6 @@
 import React from "react";
 import MediaPlayer from "../components/player/MediaPlayer";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import ReactDOM from "react-dom/client";
 import { Root } from "../components/Root";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
@@ -13,7 +13,6 @@ import { UserAdminSettings } from "../components/settings/admin/UserAdminSetting
 import { Login } from "../components/Login";
 import { Navigate } from "react-router";
 import { Auth } from "../components/Auth";
-import { Typography } from "@mui/material";
 import { Home } from "../components/Home";
 import { ShowLibraryBrowser } from "../components/browser/show/ShowLibraryBrowser";
 import { ShowSeasonBrowser } from "../components/browser/show/ShowSeasonBrowser";
@@ -34,105 +33,94 @@ function Index(props: IndexProps) {
     <BrowserRouter>
       <Routes>
         <Route
-          path={ServerRoutes.root}
+          path={ServerRoutes.Web.root}
           element={
             <Root>
               <Outlet />
             </Root>
           }
         >
-          <Route index element={<Navigate to={ServerRoutes.Web.root} />} />
-          <Route path={ServerRoutes.Web.root}>
+          <Route
+            index={true}
+            element={<Navigate to={ServerRoutes.Web.Private.Browse.home} />}
+          />
+          <Route path={ServerRoutes.Web.Auth.login} element={<Login />} />
+          <Route
+            path={ServerRoutes.Web.Private.root}
+            element={
+              <Auth>
+                <Outlet />
+              </Auth>
+            }
+          >
             <Route
-              index
-              element={<Navigate to={ServerRoutes.Web.Home.root} />}
-            />
-            <Route
-              path={ServerRoutes.Web.Home.root}
+              path={ServerRoutes.Web.Private.Browse.root}
               element={
-                <Auth>
+                <NavBar>
                   <Outlet />
-                </Auth>
+                </NavBar>
               }
             >
-              <Route index element={<Home socket={socket} />} />
               <Route
-                path={ServerRoutes.Web.Home.Browser.root}
-                element={
-                  <NavBar>
-                    <Outlet />
-                  </NavBar>
-                }
-              >
-                <Route
-                  index
-                  element={<Navigate to={ServerRoutes.Web.Home.root} />}
-                />
-                <Route
-                  path={ServerRoutes.Web.Home.Browser.Shows.library}
-                  element={<ShowLibraryBrowser socket={socket} />}
-                />
-                <Route
-                  path={ServerRoutes.Web.Home.Browser.Shows.show}
-                  element={<ShowSeriesBrowser socket={socket} />}
-                />
-                <Route
-                  path={ServerRoutes.Web.Home.Browser.Shows.season}
-                  element={<ShowSeasonBrowser socket={socket} />}
-                />
-                <Route
-                  path={ServerRoutes.Web.Home.Browser.Shows.episode}
-                  element={<ShowEpisodeBrowser socket={socket} />}
-                />
-                <Route
-                  path={ServerRoutes.Web.Home.Browser.Settings.root}
-                  element={
-                    <Settings>
-                      <Outlet />
-                    </Settings>
-                  }
-                >
-                  {/* TODO implement settings index */}
-                  <Route
-                    index
-                    element={
-                      <Navigate
-                        to={ServerRoutes.Web.Home.Browser.Settings.user}
-                      />
-                    }
-                  />
-                  <Route
-                    path={ServerRoutes.Web.Home.Browser.Settings.user}
-                    element={<UserSettings socket={socket} />}
-                  />
-                  <Route
-                    path={ServerRoutes.Web.Home.Browser.Settings.client}
-                    element={<ClientSettings />}
-                  />
-                  <Route
-                    path={ServerRoutes.Web.Home.Browser.Settings.Admin.root}
-                    element={<AdminSettings />}
-                  >
-                    <Route
-                      path={ServerRoutes.Web.Home.Browser.Settings.Admin.users}
-                      element={<UserAdminSettings socket={socket} />}
-                    />
-                  </Route>
-                </Route>
-              </Route>
+                path={ServerRoutes.Web.Private.Browse.home}
+                element={<Home />}
+              />
               <Route
-                path={ServerRoutes.Web.Home.player}
-                element={<MediaPlayer socket={props.io} />}
+                path={ServerRoutes.Web.Private.Browse.Library.show}
+                element={<ShowLibraryBrowser socket={socket} />}
+              />
+              <Route
+                path={ServerRoutes.Web.Private.Browse.show}
+                element={<ShowSeriesBrowser socket={socket} />}
+              />
+              <Route
+                path={ServerRoutes.Web.Private.Browse.season}
+                element={<ShowSeasonBrowser socket={socket} />}
+              />
+              <Route
+                path={ServerRoutes.Web.Private.Browse.episode}
+                element={<ShowEpisodeBrowser socket={socket} />}
               />
 
-              <Route element={<Typography>Homepage</Typography>} />
+              <Route
+                path={ServerRoutes.Web.Private.Browse.Settings.root}
+                element={
+                  <Settings>
+                    <Outlet />
+                  </Settings>
+                }
+              >
+                {/* TODO implement settings index */}
+                <Route
+                  index
+                  element={
+                    <Navigate
+                      to={ServerRoutes.Web.Private.Browse.Settings.user}
+                    />
+                  }
+                />
+                <Route
+                  path={ServerRoutes.Web.Private.Browse.Settings.user}
+                  element={<UserSettings socket={socket} />}
+                />
+                <Route
+                  path={ServerRoutes.Web.Private.Browse.Settings.client}
+                  element={<ClientSettings />}
+                />
+                <Route
+                  path={ServerRoutes.Web.Private.Browse.Settings.Admin.root}
+                  element={<AdminSettings />}
+                >
+                  <Route
+                    path={ServerRoutes.Web.Private.Browse.Settings.Admin.users}
+                    element={<UserAdminSettings socket={socket} />}
+                  />
+                </Route>
+              </Route>
             </Route>
             <Route
-              path={ServerRoutes.Web.login}
-              element={
-                // TODO redirect home if already logged in
-                <Login />
-              }
+              path={ServerRoutes.Web.Private.View.show}
+              element={<MediaPlayer socket={props.io} />}
             />
           </Route>
         </Route>

@@ -13,18 +13,18 @@ export function Settings(props: SettingsProps) {
       {(user) => (
         <>
           <Box>
-            <ButtonLink to={ServerRoutes.Web.Home.Browser.Settings.root}>
+            <ButtonLink to={ServerRoutes.Web.Private.Browse.Settings.root}>
               <Typography>Settings</Typography>
             </ButtonLink>
-            <ButtonLink to={ServerRoutes.Web.Home.Browser.Settings.client}>
+            <ButtonLink to={ServerRoutes.Web.Private.Browse.Settings.client}>
               <Typography>Client</Typography>
             </ButtonLink>
-            <ButtonLink to={ServerRoutes.Web.Home.Browser.Settings.user}>
+            <ButtonLink to={ServerRoutes.Web.Private.Browse.Settings.user}>
               <Typography>User</Typography>
             </ButtonLink>
             {user?.permissions?.isAdmin ? (
               <ButtonLink
-                to={ServerRoutes.Web.Home.Browser.Settings.Admin.root}
+                to={ServerRoutes.Web.Private.Browse.Settings.Admin.root}
               >
                 <Typography>Admin</Typography>
               </ButtonLink>

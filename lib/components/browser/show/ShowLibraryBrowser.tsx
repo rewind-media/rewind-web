@@ -32,7 +32,7 @@ export function ShowLibraryBrowser(props: ShowLibraryBrowserProps) {
                 >
                   <ButtonLink
                     key={showEpisodeInfo.id}
-                    to={ServerRoutes.Web.Home.Browser.Shows.formatShowRoute(
+                    to={ServerRoutes.Web.Private.Browse.formatShowRoute(
                       showEpisodeInfo.id
                     )}
                     sx={{ width: "100%" }}

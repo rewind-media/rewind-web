@@ -45,19 +45,19 @@ export function NavBar(props: NavBarProps) {
         onClose={() => setDrawerOpen(false)}
       >
         <ButtonLink
-          to={ServerRoutes.Web.Home.Browser.root}
+          to={ServerRoutes.Web.Private.Browse.root}
           onClick={() => setDrawerOpen(false)}
         >
           <Home />
         </ButtonLink>
         <ButtonLink
-          to={ServerRoutes.Web.Home.Browser.root}
+          to={ServerRoutes.Web.Private.Browse.root}
           onClick={() => setDrawerOpen(false)}
         >
           <BrowseGallery />
         </ButtonLink>
         <ButtonLink
-          to={ServerRoutes.Web.Home.Browser.Settings.root}
+          to={ServerRoutes.Web.Private.Browse.Settings.root}
           onClick={() => setDrawerOpen(false)}
         >
           <Settings />
