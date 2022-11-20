@@ -15,9 +15,9 @@ import { Navigate } from "react-router";
 import { Auth } from "../components/Auth";
 import { Home } from "../components/Home";
 import { ShowLibraryBrowser } from "../components/browser/show/ShowLibraryBrowser";
-import { ShowSeasonBrowser } from "../components/browser/show/ShowSeasonBrowser";
-import { ShowSeriesBrowser } from "../components/browser/show/ShowSeriesBrowser";
-import { ShowEpisodeBrowser } from "../components/browser/show/ShowEpisodeBrowser";
+import { SeasonBrowser } from "../components/browser/show/SeasonBrowser";
+import { ShowBrowser } from "../components/browser/show/ShowBrowser";
+import { EpisodeBrowser } from "../components/browser/show/EpisodeBrowser";
 import { WebLog } from "../log";
 import { SocketClient } from "../models";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
@@ -71,15 +71,15 @@ function Index(props: IndexProps) {
               />
               <Route
                 path={ServerRoutes.Web.Private.Browse.show}
-                element={<ShowSeriesBrowser socket={socket} />}
+                element={<ShowBrowser socket={socket} />}
               />
               <Route
                 path={ServerRoutes.Web.Private.Browse.season}
-                element={<ShowSeasonBrowser socket={socket} />}
+                element={<SeasonBrowser socket={socket} />}
               />
               <Route
                 path={ServerRoutes.Web.Private.Browse.episode}
-                element={<ShowEpisodeBrowser socket={socket} />}
+                element={<EpisodeBrowser socket={socket} />}
               />
 
               <Route

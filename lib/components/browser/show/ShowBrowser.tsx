@@ -8,7 +8,7 @@ import { PropsWithSocket } from "../../../models";
 
 export interface ShowBrowserProps extends PropsWithSocket {}
 
-export function ShowSeriesBrowser(props: ShowBrowserProps) {
+export function ShowBrowser(props: ShowBrowserProps) {
   const show = useParams().show;
   if (!show) return <></>;
 

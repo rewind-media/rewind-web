@@ -8,7 +8,7 @@ import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 export interface ShowSeasonEpisodeBrowserProps extends PropsWithSocket {}
 
-export function ShowEpisodeBrowser(props: ShowSeasonEpisodeBrowserProps) {
+export function EpisodeBrowser(props: ShowSeasonEpisodeBrowserProps) {
   const episodeId = useParams().episode;
   if (!episodeId) return <></>;
 

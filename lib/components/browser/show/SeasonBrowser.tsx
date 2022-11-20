@@ -9,7 +9,7 @@ import { Box, Grid, Typography } from "@mui/material";
 
 export interface ShowSeasonBrowserProps extends PropsWithSocket {}
 
-export function ShowSeasonBrowser(props: ShowSeasonBrowserProps) {
+export function SeasonBrowser(props: ShowSeasonBrowserProps) {
   const season = useParams().season;
   if (!season) return <></>;
   return (
