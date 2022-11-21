@@ -2,10 +2,10 @@ import {
   HttpClient,
   Library,
   LibraryType,
-  ServerRoutes,
 } from "@rewind-media/rewind-protocol";
 import React, { useEffect, useState } from "react";
 import { ButtonLink } from "./ButtonLink";
+import { WebRoutes } from "../routes";
 
 export function Home() {
   const [libraries, setLibraries] = useState<Library[]>([]);
@@ -21,9 +21,7 @@ export function Home() {
       case LibraryType.Image:
         return ""; // TODO
       case LibraryType.Show:
-        return ServerRoutes.Web.Private.Browse.Library.formatShowRoute(
-          lib.name
-        );
+        return WebRoutes.Browse.Library.formatShowRoute(lib.name);
     }
   });
 

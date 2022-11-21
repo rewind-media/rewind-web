@@ -5,6 +5,7 @@ import { Typography } from "@mui/material";
 import { EpisodeLoader } from "../../loader/show/EpisodeLoader";
 import { PropsWithSocket } from "../../../models";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
+import { WebRoutes } from "../../../routes";
 
 export interface ShowSeasonEpisodeBrowserProps extends PropsWithSocket {}
 
@@ -20,7 +21,7 @@ export function EpisodeBrowser(props: ShowSeasonEpisodeBrowserProps) {
           <>
             <Typography>{episode?.name}</Typography>
             <ButtonLink
-              to={ServerRoutes.Web.Private.View.formatPlayerRoute(
+              to={WebRoutes.View.formatPlayerRoute(
                 episode?.libraryName,
                 episode.id
               )}

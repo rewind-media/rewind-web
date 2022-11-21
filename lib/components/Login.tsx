@@ -1,6 +1,7 @@
 import { Button, FormGroup, Grid, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { WebRoutes } from "../routes";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 export function Login() {
@@ -10,26 +11,28 @@ export function Login() {
 
   const nav = useNavigate();
 
-  function submit() {
-    fetch(ServerRoutes.Api.Auth.login, {
+  async function submit() {
+    const res = await fetch(ServerRoutes.Api.Auth.login, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-
-      //make sure to serialize your JSON body
       body: JSON.stringify({
         username: username,
         password: password,
       }),
-    }).then((res) => {
-      if (res.ok) {
-        nav(ServerRoutes.Web.root);
-      } else {
-        setError("Incorrect username or password.");
-      }
     });
+    console.log(`Login post: Status: ${res.status}, ${JSON.stringify(res)}`);
+
+    if (res.status == 200) {
+      console.log(`navigating to '${WebRoutes.root}'`);
+      nav(WebRoutes.root);
+    } else if (res.status == 401) {
+      setError("Incorrect username or password.");
+    } else {
+      setError("Internal server error");
+    }
     return false;
   }
 

@@ -1,14 +1,14 @@
-import { SvgIcon, SvgIconProps } from "@mui/material";
 import React from "react";
-// import RewindIconSvg from "../static/img/RewindIcon.svg";
-export interface RewindIconProps extends SvgIconProps {}
+import RewindIconSvg from "../static/img/RewindIcon.svg";
+export interface RewindIconProps
+  extends Omit<
+    React.DetailedHTMLProps<
+      React.ImgHTMLAttributes<HTMLImageElement>,
+      HTMLImageElement
+    >,
+    keyof { src: string; alt: string }
+  > {}
 
-export function RewindIcon(props: RewindIconProps) {
-  return (
-    <SvgIcon
-      // component={RewindIconSvg}
-      sx={{ width: "auto", height: "2.5em", ...props.sx }}
-      viewBox={"0 0 60 60"}
-    />
-  );
-}
+export const RewindIcon = (props: RewindIconProps) => (
+  <img {...props} src={RewindIconSvg} alt={"Rewind Icon"} />
+);

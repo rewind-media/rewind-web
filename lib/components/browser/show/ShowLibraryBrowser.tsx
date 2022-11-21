@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ButtonLink } from "../../ButtonLink";
-import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { useParams } from "react-router";
 import { ShowsLoader } from "../../loader/show/ShowsLoader";
 import { PropsWithSocket } from "../../../models";
 import { Box, Grid, Typography } from "@mui/material";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
+import { WebRoutes } from "../../../routes";
 
 export interface ShowLibraryBrowserProps extends PropsWithSocket {}
 
@@ -32,9 +33,7 @@ export function ShowLibraryBrowser(props: ShowLibraryBrowserProps) {
                 >
                   <ButtonLink
                     key={showEpisodeInfo.id}
-                    to={ServerRoutes.Web.Private.Browse.formatShowRoute(
-                      showEpisodeInfo.id
-                    )}
+                    to={WebRoutes.Browse.formatShowRoute(showEpisodeInfo.id)}
                     sx={{ width: "100%" }}
                   >
                     <Box sx={{ width: "100%" }}>

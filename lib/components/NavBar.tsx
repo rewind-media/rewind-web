@@ -11,6 +11,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { BrowseGallery, Home, Logout, Settings } from "@mui/icons-material";
 import { RewindIcon } from "./RewindIcon";
 import { ButtonLink } from "./ButtonLink";
+import { WebRoutes } from "../routes";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 export interface NavBarProps extends PropsWithChildren {}
@@ -34,7 +35,9 @@ export function NavBar(props: NavBarProps) {
           >
             <MenuIcon />
           </IconButton>
-          <RewindIcon />
+          <ButtonLink to={WebRoutes.root}>
+            <RewindIcon style={{ width: "2.5em", height: "auto" }} />
+          </ButtonLink>
         </Toolbar>
       </AppBar>
       <Toolbar />
@@ -45,19 +48,19 @@ export function NavBar(props: NavBarProps) {
         onClose={() => setDrawerOpen(false)}
       >
         <ButtonLink
-          to={ServerRoutes.Web.Private.Browse.root}
+          to={WebRoutes.Browse.root}
           onClick={() => setDrawerOpen(false)}
         >
           <Home />
         </ButtonLink>
         <ButtonLink
-          to={ServerRoutes.Web.Private.Browse.root}
+          to={WebRoutes.Browse.root}
           onClick={() => setDrawerOpen(false)}
         >
           <BrowseGallery />
         </ButtonLink>
         <ButtonLink
-          to={ServerRoutes.Web.Private.Browse.Settings.root}
+          to={WebRoutes.Browse.Settings.root}
           onClick={() => setDrawerOpen(false)}
         >
           <Settings />

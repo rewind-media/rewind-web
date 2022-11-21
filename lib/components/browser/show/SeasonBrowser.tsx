@@ -1,11 +1,12 @@
 import React from "react";
 
 import { ButtonLink } from "../../ButtonLink";
-import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { useParams } from "react-router";
 import { EpisodesLoader } from "../../loader/show/EpisodesLoader";
 import { PropsWithSocket } from "../../../models";
 import { Box, Grid, Typography } from "@mui/material";
+import { WebRoutes } from "../../../routes";
+import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 export interface ShowSeasonBrowserProps extends PropsWithSocket {}
 
@@ -34,7 +35,7 @@ export function SeasonBrowser(props: ShowSeasonBrowserProps) {
                   >
                     <ButtonLink
                       key={showEpisodeInfo.id}
-                      to={ServerRoutes.Web.Private.Browse.formatEpisodeRoute(
+                      to={WebRoutes.Browse.formatEpisodeRoute(
                         showEpisodeInfo.id
                       )}
                       sx={{ width: "100%" }}
