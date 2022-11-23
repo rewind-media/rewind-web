@@ -5,7 +5,6 @@ import ReactDOM from "react-dom/client";
 import { Root } from "../components/Root";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { Settings } from "../components/settings/Settings";
-import { NavBar } from "../components/NavBar";
 import { UserSettings } from "../components/settings/UserSettings";
 import { ClientSettings } from "../components/settings/ClientSettings";
 import { AdminSettings } from "../components/settings/admin/AdminSettings";
@@ -41,77 +40,60 @@ function Index(props: IndexProps) {
               </Auth>
             }
           >
+            <Route index element={<Home />} />
             <Route
-              index
-              element={
-                <NavBar>
-                  <Home />
-                </NavBar>
-              }
+              path={WebRoutes.library}
+              element={<ShowLibraryBrowser socket={socket} />}
             />
             <Route
-              path={WebRoutes.Browse.root}
+              path={WebRoutes.show}
+              element={<ShowBrowser socket={socket} />}
+            />
+            <Route
+              path={WebRoutes.season}
+              element={<SeasonBrowser socket={socket} />}
+            />
+            <Route
+              path={WebRoutes.episode}
+              element={<EpisodeBrowser socket={socket} />}
+            />
+
+            <Route
+              path={WebRoutes.Settings.root}
               element={
-                <NavBar>
+                <Settings>
                   <Outlet />
-                </NavBar>
+                </Settings>
               }
             >
-              <Route path={WebRoutes.Browse.home} element={<Home />} />
+              {/* TODO implement settings index */}
               <Route
-                path={WebRoutes.Browse.Library.show}
-                element={<ShowLibraryBrowser socket={socket} />}
+                index
+                element={<Navigate to={WebRoutes.Settings.user} />}
               />
               <Route
-                path={WebRoutes.Browse.show}
-                element={<ShowBrowser socket={socket} />}
+                path={WebRoutes.Settings.user}
+                element={<UserSettings socket={socket} />}
               />
               <Route
-                path={WebRoutes.Browse.season}
-                element={<SeasonBrowser socket={socket} />}
+                path={WebRoutes.Settings.client}
+                element={<ClientSettings />}
               />
               <Route
-                path={WebRoutes.Browse.episode}
-                element={<EpisodeBrowser socket={socket} />}
-              />
-
-              <Route
-                path={WebRoutes.Browse.Settings.root}
-                element={
-                  <Settings>
-                    <Outlet />
-                  </Settings>
-                }
+                path={WebRoutes.Settings.Admin.root}
+                element={<AdminSettings />}
               >
-                {/* TODO implement settings index */}
                 <Route
-                  index
-                  element={<Navigate to={WebRoutes.Browse.Settings.user} />}
+                  path={WebRoutes.Settings.Admin.users}
+                  element={<UserAdminSettings socket={socket} />}
                 />
-                <Route
-                  path={WebRoutes.Browse.Settings.user}
-                  element={<UserSettings socket={socket} />}
-                />
-                <Route
-                  path={WebRoutes.Browse.Settings.client}
-                  element={<ClientSettings />}
-                />
-                <Route
-                  path={WebRoutes.Browse.Settings.Admin.root}
-                  element={<AdminSettings />}
-                >
-                  <Route
-                    path={WebRoutes.Browse.Settings.Admin.users}
-                    element={<UserAdminSettings socket={socket} />}
-                  />
-                </Route>
               </Route>
             </Route>
-            <Route
-              path={WebRoutes.View.show}
-              element={<MediaPlayer socket={props.io} />}
-            />
           </Route>
+          <Route
+            path={WebRoutes.player}
+            element={<MediaPlayer socket={props.io} />}
+          />
           <Route path={WebRoutes.Auth.login} element={<Login />} />
         </Routes>
       </BrowserRouter>

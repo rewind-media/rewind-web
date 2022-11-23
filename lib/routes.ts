@@ -2,44 +2,38 @@ import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 export namespace WebRoutes {
   export const root = `${ServerRoutes.root}`;
-  export namespace Browse {
-    export const root = `${WebRoutes.root}browse/`;
-    export const home = `${root}home`;
-    export const show = `${root}show/:show`;
-    export const season = `${root}season/:season`;
-    export const episode = `${root}episode/:episode`;
 
-    export const formatShowRoute = (showId: string) =>
-      show.replace(":show", showId);
-    export const formatSeasonRoute = (seasonId: string) =>
-      season.replace(":season", seasonId);
-    export const formatEpisodeRoute = (library: string) =>
-      episode.replace(":episode", library);
+  export const home = `${root}home`;
 
-    export namespace Library {
-      export const root = `${Browse.root}lib/:library/`;
-      export const show = `${root}show`;
-      export const formatShowRoute = (libraryId: string) =>
-        show.replace(":library", libraryId);
+  export const show = `${root}show/:showId`;
+  export const formatShowRoute = (showId: string) =>
+    show.replace(":showId", showId);
+
+  export const season = `${root}season/:seasonId`;
+  export const formatSeasonRoute = (seasonId: string) =>
+    season.replace(":seasonId", seasonId);
+
+  export const episode = `${root}episode/:episodeId`;
+  export const formatEpisodeRoute = (episodeId: string) =>
+    episode.replace(":episodeId", episodeId);
+
+  export const library = `${root}library/:libraryId`;
+  export const formatLibraryRoute = (libraryId: string) =>
+    library.replace(":libraryId", libraryId);
+
+  export const player = `${root}player/:libraryId/:mediaId`;
+  export const formatPlayerRoute = (libraryId: string, mediaId: string) =>
+    player.replace(":libraryId", libraryId).replace(":mediaId", mediaId);
+
+  export namespace Settings {
+    export const root = `${WebRoutes.root}settings/`;
+    export const client = `${root}client`;
+    export const user = `${root}user`;
+
+    export namespace Admin {
+      export const root = `${Settings.root}admin/`;
+      export const users = `${root}users`;
     }
-
-    export namespace Settings {
-      export const root = `${Browse.root}settings/`;
-      export const client = `${root}client`;
-      export const user = `${root}user`;
-
-      export namespace Admin {
-        export const root = `${Settings.root}admin/`;
-        export const users = `${root}users`;
-      }
-    }
-  }
-
-  export namespace View {
-    export const root = `${WebRoutes.root}view/`;
-    export const show = `${root}show/:library/:id`;
-    export const formatPlayerRoute = (library: string, id: string) =>
-      `${root}show/${library}/${id}`;
   }
 
   export namespace Auth {

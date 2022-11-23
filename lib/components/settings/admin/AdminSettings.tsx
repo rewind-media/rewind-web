@@ -8,10 +8,10 @@ export function AdminSettings() {
   return (
     <>
       <Box>
-        <ButtonLink to={WebRoutes.Browse.Settings.Admin.root}>
+        <ButtonLink to={WebRoutes.Settings.Admin.root}>
           <Typography>Settings</Typography>
         </ButtonLink>
-        <ButtonLink to={WebRoutes.Browse.Settings.Admin.users}>
+        <ButtonLink to={WebRoutes.Settings.Admin.users}>
           <Typography>User</Typography>
         </ButtonLink>
       </Box>

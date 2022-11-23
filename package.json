@@ -90,6 +90,7 @@
     "typescript": "^4.8.4"
   },
   "files": [
-    "./webpack/**"
+    "./webpack/**",
+    "./dist/static/**"
   ]
 }

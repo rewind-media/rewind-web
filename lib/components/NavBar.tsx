@@ -9,7 +9,7 @@ import {
 import React, { PropsWithChildren, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { BrowseGallery, Home, Logout, Settings } from "@mui/icons-material";
-import { RewindIcon } from "./RewindIcon";
+import { RewindIconTape } from "./RewindIconTape";
 import { ButtonLink } from "./ButtonLink";
 import { WebRoutes } from "../routes";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
@@ -36,7 +36,7 @@ export function NavBar(props: NavBarProps) {
             <MenuIcon />
           </IconButton>
           <ButtonLink to={WebRoutes.root}>
-            <RewindIcon style={{ width: "2.5em", height: "auto" }} />
+            <RewindIconTape style={{ width: "2.5em", height: "auto" }} />
           </ButtonLink>
         </Toolbar>
       </AppBar>
@@ -47,20 +47,14 @@ export function NavBar(props: NavBarProps) {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       >
-        <ButtonLink
-          to={WebRoutes.Browse.root}
-          onClick={() => setDrawerOpen(false)}
-        >
+        <ButtonLink to={WebRoutes.root} onClick={() => setDrawerOpen(false)}>
           <Home />
         </ButtonLink>
-        <ButtonLink
-          to={WebRoutes.Browse.root}
-          onClick={() => setDrawerOpen(false)}
-        >
+        <ButtonLink to={WebRoutes.root} onClick={() => setDrawerOpen(false)}>
           <BrowseGallery />
         </ButtonLink>
         <ButtonLink
-          to={WebRoutes.Browse.Settings.root}
+          to={WebRoutes.Settings.root}
           onClick={() => setDrawerOpen(false)}
         >
           <Settings />

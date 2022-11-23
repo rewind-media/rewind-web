@@ -23,15 +23,15 @@ interface MediaPlayerProps extends PropsWithSocket {
 const log = WebLog.getChildCategory("MediaPlayer");
 
 function MediaPlayer(props: MediaPlayerProps) {
-  const { id, library } = useParams();
+  const { mediaId, libraryId } = useParams();
   React.useEffect(() => {}, [window.location]);
 
   const [clientStreamProps, setClientStreamProps] = useState<HlsStreamProps>();
   const nav = useNavigate();
   const goToNextEpisode = (libName: string, episodeId: string) => {
-    if (libName !== library || id !== episodeId) {
+    if (libName !== libraryId || mediaId !== episodeId) {
       setClientStreamProps(undefined);
-      nav(WebRoutes.View.formatPlayerRoute(libName, episodeId), {
+      nav(WebRoutes.formatPlayerRoute(libName, episodeId), {
         replace: true,
       });
     }
@@ -48,10 +48,10 @@ function MediaPlayer(props: MediaPlayerProps) {
       props.socket.emit("cancelStream");
     };
   }, []);
-  log.info(`Playing media ${id} from ${library}`);
+  log.info(`Playing media ${mediaId} from ${libraryId}`);
 
-  return id ? (
-    library ? (
+  return mediaId ? (
+    libraryId ? (
       <Box sx={{ height: "100vh" }} key={window.location.pathname}>
         <Loading
           waitFor={clientStreamProps}
@@ -61,7 +61,7 @@ function MediaPlayer(props: MediaPlayerProps) {
               hlsStreamProps={t}
               onReloadStream={(wanted) => {
                 props.socket.emit("createStream", {
-                  library: library,
+                  library: libraryId,
                   mediaId: t.mediaInfo.id,
                   startOffset: wanted,
                 });
@@ -74,7 +74,7 @@ function MediaPlayer(props: MediaPlayerProps) {
               // TODO pull this ugly mess out
               onEnded={async () => {
                 const fail = () => {
-                  nav(WebRoutes.Browse.home);
+                  nav(WebRoutes.home);
                 };
                 const currEpisode = (
                   await HttpClient.getEpisode(t.mediaInfo.id)
@@ -124,8 +124,8 @@ function MediaPlayer(props: MediaPlayerProps) {
           )}
           onWaitOnce={() => {
             props.socket.emit("createStream", {
-              library: library,
-              mediaId: id,
+              library: libraryId,
+              mediaId: mediaId,
               startOffset: 0,
             });
           }}
