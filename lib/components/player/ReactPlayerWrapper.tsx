@@ -1,7 +1,7 @@
 import React from "react";
 import ReactPlayer from "react-player";
 import { WebLog } from "../../log";
-import { HlsStreamProps } from "@rewind-media/rewind-protocol";
+import { HlsStreamProps, ServerRoutes } from "@rewind-media/rewind-protocol";
 
 const log = WebLog.getChildCategory("Pla");
 
@@ -40,7 +40,17 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
           hlsOptions: {
             backBufferLength: Infinity,
             maxBufferHole: 0.5,
+            subtitleDisplay: true,
           },
+          // tracks: [
+          //   {
+          //     kind: "subtitles",
+          //     src: ServerRoutes.Api.Stream.formatSubtitlePath(),
+          //     srcLang: "en",
+          //     default: true,
+          //     label: "subtitles",
+          //   },
+          // ],
         },
       }}
       onError={(e, data) => {
@@ -51,7 +61,7 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
           } encountered error: ${JSON.stringify(data)}`
         );
 
-        props.onReloadStream();
+        // props.onReloadStream();
 
         // if (
         //   e.toString() !==

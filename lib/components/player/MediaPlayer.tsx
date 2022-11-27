@@ -3,7 +3,7 @@ import { HlsPlayer } from "./HlsPlayer";
 import React, { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
 import { Loading } from "../Loading";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { WebLog } from "../../log";
 import { PropsWithSocket } from "../../models";
 import {
@@ -14,6 +14,7 @@ import {
   HttpClient,
 } from "@rewind-media/rewind-protocol";
 import { WebRoutes } from "../../routes";
+import { EpisodeLoader } from "../loader/show/EpisodeLoader";
 
 interface MediaPlayerProps extends PropsWithSocket {
   readonly onBackButton?: () => void;
@@ -24,8 +25,8 @@ const log = WebLog.getChildCategory("MediaPlayer");
 
 function MediaPlayer(props: MediaPlayerProps) {
   const { mediaId, libraryId } = useParams();
+  const [episode, setEpisode] = useState<EpisodeInfo>();
   React.useEffect(() => {}, [window.location]);
-
   const [clientStreamProps, setClientStreamProps] = useState<HlsStreamProps>();
   const nav = useNavigate();
   const goToNextEpisode = (libName: string, episodeId: string) => {
@@ -37,22 +38,32 @@ function MediaPlayer(props: MediaPlayerProps) {
     }
   };
 
+  const goBack = () => nav(props.backButtonPath ?? ServerRoutes.root);
+  if (!mediaId || !libraryId) {
+    return <Navigate to={props.backButtonPath ?? ServerRoutes.root} />;
+  }
+
   React.useEffect(() => {
     props.socket.on("createStreamCallback", (e) => {
       setClientStreamProps(e.streamProps);
     });
-  });
-
-  React.useEffect(() => {
+    HttpClient.getEpisode(mediaId)
+      .then((res) => setEpisode(res.episode))
+      .catch((err) => {
+        log.error("Failed to get EpisodeInfo", err);
+        goBack();
+      });
     return () => {
       props.socket.emit("cancelStream");
     };
   }, []);
   log.info(`Playing media ${mediaId} from ${libraryId}`);
 
-  return mediaId ? (
-    libraryId ? (
-      <Box sx={{ height: "100vh" }} key={window.location.pathname}>
+  return (
+    <Box sx={{ height: "100vh" }} key={window.location.pathname}>
+      {!episode ? (
+        <CircularProgress />
+      ) : (
         <Loading
           waitFor={clientStreamProps}
           render={(t) => (
@@ -60,11 +71,14 @@ function MediaPlayer(props: MediaPlayerProps) {
               {...props}
               hlsStreamProps={t}
               onReloadStream={(wanted) => {
-                props.socket.emit("createStream", {
+                const req = {
                   library: libraryId,
                   mediaId: t.mediaInfo.id,
+                  subtitles: getSubtitles(episode),
                   startOffset: wanted,
-                });
+                };
+                console.log(`Requesting stream reload: ${JSON.stringify(req)}`);
+                props.socket.emit("createStream", req);
                 setClientStreamProps(undefined);
               }}
               onUnmount={() => {
@@ -123,19 +137,18 @@ function MediaPlayer(props: MediaPlayerProps) {
             />
           )}
           onWaitOnce={() => {
-            props.socket.emit("createStream", {
+            const req = {
               library: libraryId,
               mediaId: mediaId,
               startOffset: 0,
-            });
+              subtitles: getSubtitles(episode),
+            };
+            console.log(`Requesting stream: ${JSON.stringify(req)}`);
+            props.socket.emit("createStream", req);
           }}
         />
-      </Box>
-    ) : (
-      <Navigate to={props.backButtonPath ?? ServerRoutes.root} />
-    )
-  ) : (
-    <Navigate to={props.backButtonPath ?? ServerRoutes.root} />
+      )}
+    </Box>
   );
 }
 
@@ -158,4 +171,11 @@ const seasonComparator = (a: SeasonInfo, b: SeasonInfo) => {
   // }
 };
 
+function getSubtitles(episode: EpisodeInfo) {
+  const subs =
+    episode.subtitleFiles[0]?.location ??
+    episode.info.streams.find((it) => (it.codec_type as string) == "subtitle");
+  log.info(`Found Subtitles: ${subs}`);
+  return subs;
+}
 export default withSize({ monitorHeight: true })(MediaPlayer);

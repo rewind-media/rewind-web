@@ -38,10 +38,10 @@ export const HlsPlayer = (props: HlsPlayerProps) => {
   }, []);
 
   React.useEffect(() => {
-    props.onReloadStream &&
-      desiredReloadTimestamp &&
+    if (props.onReloadStream && desiredReloadTimestamp) {
       props.onReloadStream(desiredReloadTimestamp);
-  }, [props.onReloadStream, desiredReloadTimestamp]);
+    }
+  }, [desiredReloadTimestamp]);
 
   const player = (
     <ReactPlayerWrapper
@@ -52,7 +52,7 @@ export const HlsPlayer = (props: HlsPlayerProps) => {
       onPlayed={setPlayed}
       onBuffered={setBuffered}
       onReloadStream={() => {
-        log.info(`Played: ${played}, Buffered: ${buffered}`);
+        log.info(`Reloading Stream: Played: ${played}, Buffered: ${buffered}`);
         if (played >= buffered - 1)
           // If we're within a second of the end of the buffer...
           setDesiredReloadTimestamp(props.hlsStreamProps.startOffset + played);
