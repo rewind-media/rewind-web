@@ -5,6 +5,7 @@ import {
   Drawer,
   IconButton,
   Toolbar,
+  Typography,
 } from "@mui/material";
 import React, { PropsWithChildren, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -36,7 +37,7 @@ export function NavBar(props: NavBarProps) {
             <MenuIcon />
           </IconButton>
           <ButtonLink to={WebRoutes.root}>
-            <RewindIconTape style={{ width: "2.5em", height: "auto" }} />
+            <RewindIconTape style={{ width: "4em", height: "auto" }} />
           </ButtonLink>
         </Toolbar>
       </AppBar>
@@ -47,17 +48,25 @@ export function NavBar(props: NavBarProps) {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       >
-        <ButtonLink to={WebRoutes.root} onClick={() => setDrawerOpen(false)}>
-          <Home />
-        </ButtonLink>
-        <ButtonLink to={WebRoutes.root} onClick={() => setDrawerOpen(false)}>
-          <BrowseGallery />
+        <ButtonLink
+          to={WebRoutes.root}
+          onClick={() => setDrawerOpen(false)}
+          style={{ justifyContent: "start" }}
+        >
+          <Home style={{ height: "1em" }} />
+          <Typography style={{ marginLeft: "0.5em", height: "1em" }}>
+            Home
+          </Typography>
         </ButtonLink>
         <ButtonLink
           to={WebRoutes.Settings.root}
           onClick={() => setDrawerOpen(false)}
+          style={{ justifyContent: "start" }}
         >
-          <Settings />
+          <Settings style={{ height: "1em" }} />
+          <Typography style={{ marginLeft: "0.5em", height: "1em" }}>
+            Settings
+          </Typography>
         </ButtonLink>
         <Button
           onClick={() => {
@@ -68,8 +77,12 @@ export function NavBar(props: NavBarProps) {
               window.location.reload();
             });
           }}
+          style={{ justifyContent: "start" }}
         >
-          <Logout />
+          <Logout style={{ height: "1em" }} />
+          <Typography style={{ marginLeft: "0.5em", height: "1em" }}>
+            Logout
+          </Typography>
         </Button>
       </Drawer>
       {props.children}
