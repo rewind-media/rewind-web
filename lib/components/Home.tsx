@@ -1,8 +1,4 @@
-import {
-  HttpClient,
-  Library,
-  LibraryType,
-} from "@rewind-media/rewind-protocol";
+import { HttpClient, Library } from "@rewind-media/rewind-protocol";
 import React, { useEffect, useState } from "react";
 import { ButtonLink } from "./ButtonLink";
 import { WebRoutes } from "../routes";
@@ -15,14 +11,16 @@ export function Home() {
     HttpClient.listLibraries().then((it) => setLibraries(it.libraries));
   }, []);
 
-  const routes = libraries.map((lib) => WebRoutes.formatLibraryRoute(lib.name));
+  const libEntries = libraries.map((lib) => {
+    return { route: WebRoutes.formatLibraryRoute(lib.name), name: lib.name };
+  });
 
   return (
     <NavBar>
-      {routes.map((route, index) => {
+      {libEntries.map((libEntry) => {
         return (
-          <ButtonLink key={route} to={route}>
-            {libraries[index].name}
+          <ButtonLink key={libEntry.route} to={libEntry.route}>
+            {libEntry.name}
           </ButtonLink>
         );
       })}

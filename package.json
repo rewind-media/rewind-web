@@ -55,7 +55,7 @@
     "clean": "rm -rf dist webpack",
     "update": "npm update --save && ((! git diff --exit-code package.json > /dev/null && git add package.json && git commit -m 'Dependency updates') || true)",
     "prettier": "npx prettier --write .",
-    "_build": "tsc --jsx react",
+    "_build": "tsc",
     "_copy": "cp -r lib/static/ dist/static",
     "webpack": "webpack --config webpack.config.js",
     "build": "npm run prettier && npm run _build && npm run _copy && npm run webpack",

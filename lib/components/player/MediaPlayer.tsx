@@ -12,9 +12,9 @@ import {
   EpisodeInfo,
   SeasonInfo,
   HttpClient,
+  CreateEpisodeHlsStreamRequest,
 } from "@rewind-media/rewind-protocol";
 import { WebRoutes } from "../../routes";
-import { EpisodeLoader } from "../loader/show/EpisodeLoader";
 
 interface MediaPlayerProps extends PropsWithSocket {
   readonly onBackButton?: () => void;
@@ -71,7 +71,7 @@ function MediaPlayer(props: MediaPlayerProps) {
               {...props}
               hlsStreamProps={t}
               onReloadStream={(wanted) => {
-                const req = {
+                const req: CreateEpisodeHlsStreamRequest = {
                   library: libraryId,
                   mediaId: t.mediaInfo.id,
                   subtitles: getSubtitles(episode),

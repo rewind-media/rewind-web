@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ButtonLink } from "../../ButtonLink";
 import { useParams } from "react-router";
 import { ShowsLoader } from "../../loader/show/ShowsLoader";
@@ -11,7 +11,7 @@ import { NavBar } from "../../NavBar";
 export interface ShowLibraryBrowserProps extends PropsWithSocket {}
 
 export function ShowLibraryBrowser(props: ShowLibraryBrowserProps) {
-  const library = useParams().libraryId;
+  const library = useParams()["libraryId"];
   if (!library) return <></>;
 
   return (

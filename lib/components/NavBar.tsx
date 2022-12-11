@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { PropsWithChildren, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { BrowseGallery, Home, Logout, Settings } from "@mui/icons-material";
+import { Home, Logout, Settings } from "@mui/icons-material";
 import { RewindIconTape } from "./RewindIconTape";
 import { ButtonLink } from "./ButtonLink";
 import { WebRoutes } from "../routes";
@@ -73,7 +73,7 @@ export function NavBar(props: NavBarProps) {
             setDrawerOpen(false);
             fetch(ServerRoutes.Api.Auth.logout, {
               method: "POST",
-            }).then((res) => {
+            }).then(() => {
               window.location.reload();
             });
           }}

@@ -17,15 +17,12 @@ import { ShowLibraryBrowser } from "../components/browser/show/ShowLibraryBrowse
 import { SeasonBrowser } from "../components/browser/show/SeasonBrowser";
 import { ShowBrowser } from "../components/browser/show/ShowBrowser";
 import { EpisodeBrowser } from "../components/browser/show/EpisodeBrowser";
-import { WebLog } from "../log";
 import { SocketClient } from "../models";
 import { WebRoutes } from "../routes";
 
 export interface IndexProps {
   io: SocketClient;
 }
-
-const log = WebLog.getChildCategory("Index");
 
 function Index(props: IndexProps) {
   return (

@@ -1,13 +1,10 @@
 import React, { PropsWithChildren, useState } from "react";
 import { Navigate } from "react-router";
 import { CircularProgress } from "@mui/material";
-import { WebLog } from "../log";
 import { WebRoutes } from "../routes";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
 
 interface AuthProps extends PropsWithChildren {}
-
-const log = WebLog.getChildCategory("Auth");
 
 export const UserContext = React.createContext<Express.User | undefined>(
   undefined

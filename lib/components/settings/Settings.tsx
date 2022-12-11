@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { ButtonLink } from "../ButtonLink";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { UserContext } from "../Auth";
 import "../../declarations";
 import { WebRoutes } from "../../routes";

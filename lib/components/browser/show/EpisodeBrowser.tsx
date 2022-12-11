@@ -11,7 +11,7 @@ import { NavBar } from "../../NavBar";
 export interface ShowSeasonEpisodeBrowserProps extends PropsWithSocket {}
 
 export function EpisodeBrowser(props: ShowSeasonEpisodeBrowserProps) {
-  const episodeId = useParams().episodeId;
+  const episodeId = useParams()["episodeId"];
   if (!episodeId) return <></>;
 
   return (

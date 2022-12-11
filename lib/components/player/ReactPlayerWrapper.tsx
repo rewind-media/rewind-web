@@ -1,7 +1,7 @@
 import React from "react";
 import ReactPlayer from "react-player";
 import { WebLog } from "../../log";
-import { HlsStreamProps, ServerRoutes } from "@rewind-media/rewind-protocol";
+import { HlsStreamProps } from "@rewind-media/rewind-protocol";
 
 const log = WebLog.getChildCategory("Pla");
 
@@ -42,15 +42,6 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
             maxBufferHole: 0.5,
             subtitleDisplay: true,
           },
-          // tracks: [
-          //   {
-          //     kind: "subtitles",
-          //     src: ServerRoutes.Api.Stream.formatSubtitlePath(),
-          //     srcLang: "en",
-          //     default: true,
-          //     label: "subtitles",
-          //   },
-          // ],
         },
       }}
       onError={(e, data) => {
@@ -60,20 +51,6 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
             props.hlsStreamProps.id
           } encountered error: ${JSON.stringify(data)}`
         );
-
-        // props.onReloadStream();
-
-        // if (
-        //   e.toString() !==
-        //   "NotAllowedError: The play method is not allowed by the user agent or the platform in the current context, possibly because the user denied permission."
-        // ) {
-        //   setTimeout(() => {
-        //     log.info(
-        //       `Retried loading ${props.clientStreamProps.id} ${retry} times.`
-        //     );
-        //     setRetry(retry + 1);
-        //   }, 1000);
-        // }
       }}
       onProgress={(state) => {
         props.onPlayed(state.playedSeconds);

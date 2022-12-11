@@ -12,7 +12,7 @@ import { NavBar } from "../../NavBar";
 export interface ShowSeasonBrowserProps extends PropsWithSocket {}
 
 export function SeasonBrowser(props: ShowSeasonBrowserProps) {
-  const season = useParams().seasonId;
+  const season = useParams()["seasonId"];
   if (!season) return <></>;
   return (
     <NavBar>

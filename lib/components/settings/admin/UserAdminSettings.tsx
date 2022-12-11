@@ -113,8 +113,7 @@ interface CreateUserDialogProps {
 function validate(
   username: string,
   password: string,
-  verifyPassword: string,
-  isAdmin: boolean
+  verifyPassword: string
 ): boolean {
   return (
     password == verifyPassword && password.length > 8 && username.length > 1
@@ -142,7 +141,7 @@ function CreateUserDialog(props: CreateUserDialogProps) {
     }
   }, [complete, props.open]);
 
-  const valid = validate(username, password, verifyPassword, isAdmin);
+  const valid = validate(username, password, verifyPassword) && isAdmin;
 
   return (
     <Dialog open={props.open} onClose={() => setComplete(true)}>
