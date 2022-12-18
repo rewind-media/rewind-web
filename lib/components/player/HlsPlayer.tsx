@@ -10,6 +10,7 @@ import { PlayerBottomBar } from "./PlayerBottomBar";
 import { WebLog } from "../../log";
 import { HlsStreamProps } from "@rewind-media/rewind-protocol";
 import { PropsWithSocket } from "../../models";
+import { Duration } from "durr";
 
 export interface HlsPlayerProps extends PropsWithSocket {
   readonly hlsStreamProps: HlsStreamProps;
@@ -31,7 +32,8 @@ export const HlsPlayer = (props: HlsPlayerProps) => {
 
   const setControlsVisible = () => setControlsVisibleLast(Date.now());
 
-  const openControls = controlsVisibleLast >= Date.now() - 3000;
+  const openControls =
+    controlsVisibleLast >= Duration.seconds(3).before().getTime();
 
   React.useEffect(() => {
     return props.onUnmount;
