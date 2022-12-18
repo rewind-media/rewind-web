@@ -6,9 +6,11 @@ import "../static/css/Root.css";
 
 export function Root(props: PropsWithChildren) {
   return (
+    // <React.StrictMode> // TODO Reenable StrictMode
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <CookiesProvider>{props.children}</CookiesProvider>
     </ThemeProvider>
+    // </React.StrictMode>
   );
 }
