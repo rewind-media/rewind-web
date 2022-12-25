@@ -7,7 +7,7 @@ module.exports = {
   devtool: "inline-source-map",
   // Chosen mode tells webpack to use its built-in optimizations accordingly.
   entry: {
-    index: "./lib/pages/index.tsx",
+    index: "./dist/pages/index.js",
   }, // string | object | array
   // defaults to ./src
   // Here the application starts executing
@@ -24,6 +24,16 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.m?js/,
+        type: "javascript/auto",
+      },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
       {
         test: /\.tsx?$/,
         use: "ts-loader",
