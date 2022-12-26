@@ -102,10 +102,5 @@
     /* Skip type checking all .d.ts files. */
     "jsx": "react"
   },
-  "include": ["./lib"],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  }
+  "include": ["./lib"]
 }
