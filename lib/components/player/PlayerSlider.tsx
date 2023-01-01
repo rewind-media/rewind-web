@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
-import ReactPlayer from "react-player";
 import { SizeMe } from "react-sizeme";
 import { LinearProgress } from "@mui/material";
 import { WebLog } from "../../log";
+import FilePlayer from "react-player/file";
 
 const log = WebLog.getChildCategory("PlayerSlider");
 
@@ -11,7 +11,7 @@ export interface PlayerSliderProps {
   startOffset: number;
   duration: number;
   buffered: number;
-  playerRef: React.RefObject<ReactPlayer>;
+  playerRef: React.RefObject<FilePlayer>;
   setPlayed: (value: number) => void;
   setBuffered: (value: number) => void;
   setDesiredReloadTimestamp: (value: number | undefined) => void;

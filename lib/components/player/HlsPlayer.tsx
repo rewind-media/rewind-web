@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/file";
 import { Box } from "@mui/material";
 import { Pause, PlayArrow } from "@mui/icons-material";
 import "../../static/css/StreamPlayer.css";

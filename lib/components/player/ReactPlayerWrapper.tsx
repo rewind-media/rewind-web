@@ -1,12 +1,13 @@
 import React from "react";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/file";
 import { WebLog } from "../../log";
 import { HlsStreamProps } from "@rewind-media/rewind-protocol";
+import FilePlayer from "react-player/file";
 
-const log = WebLog.getChildCategory("Pla");
+const log = WebLog.getChildCategory("ReactPlayerWrapper");
 
 export interface PlayerWrapperProps {
-  playerRef: React.RefObject<ReactPlayer>;
+  playerRef: React.RefObject<FilePlayer>;
   hlsStreamProps: HlsStreamProps;
   playing: boolean;
   openControls: boolean;
@@ -33,15 +34,13 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
         overflow: "hidden",
       }}
       config={{
-        file: {
-          attributes: {
-            loop: false,
-          },
-          hlsOptions: {
-            backBufferLength: 60,
-            maxBufferHole: 0.5,
-            subtitleDisplay: true,
-          },
+        attributes: {
+          loop: false,
+        },
+        hlsOptions: {
+          backBufferLength: 60,
+          maxBufferHole: 0.5,
+          subtitleDisplay: true,
         },
       }}
       onError={(e, data) => {
