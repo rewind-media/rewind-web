@@ -38,7 +38,7 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
             loop: false,
           },
           hlsOptions: {
-            backBufferLength: Infinity,
+            backBufferLength: 60,
             maxBufferHole: 0.5,
             subtitleDisplay: true,
           },
