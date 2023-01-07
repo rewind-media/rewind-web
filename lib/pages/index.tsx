@@ -25,6 +25,7 @@ import { ShowBrowser } from "../components/browser/show/ShowBrowser";
 import { EpisodeBrowser } from "../components/browser/show/EpisodeBrowser";
 import { SocketClient } from "../models";
 import { WebRoutes } from "../routes";
+import { LibraryAdminSettings } from "../components/settings/admin/LibraryAdminSettings";
 
 export interface IndexProps {
   io: SocketClient;
@@ -85,6 +86,10 @@ function Index(props: IndexProps) {
               <Route
                 path={WebRoutes.Settings.Admin.users}
                 element={<UserAdminSettings socket={socket} />}
+              />{" "}
+              <Route
+                path={WebRoutes.Settings.Admin.libraries}
+                element={<LibraryAdminSettings socket={socket} />}
               />
             </Route>
           </Route>

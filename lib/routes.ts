@@ -33,6 +33,7 @@ export namespace WebRoutes {
     export namespace Admin {
       export const root = `${Settings.root}admin/`;
       export const users = `${root}users`;
+      export const libraries = `${root}libraries`;
     }
   }
 
