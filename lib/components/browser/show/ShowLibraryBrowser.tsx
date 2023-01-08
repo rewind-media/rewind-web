@@ -2,15 +2,12 @@ import React from "react";
 import { ButtonLink } from "../../ButtonLink";
 import { useParams } from "react-router";
 import { ShowsLoader } from "../../loader/show/ShowsLoader";
-import { PropsWithSocket } from "../../../models";
 import { Box, Grid, Typography } from "@mui/material";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { WebRoutes } from "../../../routes";
 import { NavBar } from "../../NavBar";
 
-export interface ShowLibraryBrowserProps extends PropsWithSocket {}
-
-export function ShowLibraryBrowser(props: ShowLibraryBrowserProps) {
+export function ShowLibraryBrowser() {
   const library = useParams()["libraryId"];
   if (!library) return <></>;
 
@@ -60,7 +57,6 @@ export function ShowLibraryBrowser(props: ShowLibraryBrowserProps) {
               })}
           </Grid>
         )}
-        socket={props.socket}
       />
     </NavBar>
   );

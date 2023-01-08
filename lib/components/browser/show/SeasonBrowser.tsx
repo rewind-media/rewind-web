@@ -3,22 +3,18 @@ import React from "react";
 import { ButtonLink } from "../../ButtonLink";
 import { useParams } from "react-router";
 import { EpisodesLoader } from "../../loader/show/EpisodesLoader";
-import { PropsWithSocket } from "../../../models";
 import { Box, Grid, Typography } from "@mui/material";
 import { WebRoutes } from "../../../routes";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { NavBar } from "../../NavBar";
 
-export interface ShowSeasonBrowserProps extends PropsWithSocket {}
-
-export function SeasonBrowser(props: ShowSeasonBrowserProps) {
+export function SeasonBrowser() {
   const season = useParams()["seasonId"];
   if (!season) return <></>;
   return (
     <NavBar>
       <EpisodesLoader
         seasonId={season}
-        socket={props.socket}
         onLoad={(episodes) => {
           return (
             <Grid

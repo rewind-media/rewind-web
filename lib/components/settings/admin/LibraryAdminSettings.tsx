@@ -12,7 +12,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { SocketClient } from "../../../models";
 import {
   HttpClient,
   Library,
@@ -20,9 +19,7 @@ import {
 } from "@rewind-media/rewind-protocol";
 import { List } from "immutable";
 
-export interface LibraryAdminSettingsProps {
-  socket: SocketClient;
-}
+export interface LibraryAdminSettingsProps {}
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name" },
@@ -57,7 +54,7 @@ function DeleteLibraryDialog(props: DeleteLibraryDialogProps) {
   );
 }
 
-export function LibraryAdminSettings(props: LibraryAdminSettingsProps) {
+export function LibraryAdminSettings() {
   const [libraries, setLibraries] = useState<Library[]>([] as Library[]);
   const [selectedIds, setSelectedIds] = useState<string[]>([] as string[]);
   const [createLibraryDialogOpen, setCreateLibraryDialogOpen] = useState(false);
@@ -80,7 +77,6 @@ export function LibraryAdminSettings(props: LibraryAdminSettingsProps) {
           setCreateLibraryDialogOpen(false);
           fetchLibraries().then();
         }}
-        socket={props.socket}
       />
       <DeleteLibraryDialog
         open={deleteLibrariesDialogOpen}
@@ -116,7 +112,6 @@ interface CreateLibraryDialogProps {
   open: boolean;
   onComplete: () => void;
   libraries: Library[];
-  socket: SocketClient;
 }
 
 function validate(existingLibraries: Library[], name: string): boolean {

@@ -2,21 +2,21 @@ import { withSize } from "react-sizeme";
 import { HlsPlayer } from "./HlsPlayer";
 import React, { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
-import { Loading } from "../Loading";
 import { Box, CircularProgress } from "@mui/material";
 import { WebLog } from "../../log";
-import { PropsWithSocket } from "../../models";
 import {
   HlsStreamProps,
   ServerRoutes,
   EpisodeInfo,
   SeasonInfo,
   HttpClient,
-  CreateEpisodeHlsStreamRequest,
+  StreamStatus,
 } from "@rewind-media/rewind-protocol";
 import { WebRoutes } from "../../routes";
+import { Duration } from "durr";
+import { CreateHlsStreamRequest } from "@rewind-media/rewind-protocol/dist/socket";
 
-interface MediaPlayerProps extends PropsWithSocket {
+interface MediaPlayerProps {
   readonly onBackButton?: () => void;
   readonly backButtonPath?: string;
 }
@@ -28,6 +28,7 @@ function MediaPlayer(props: MediaPlayerProps) {
   const [episode, setEpisode] = useState<EpisodeInfo>();
   React.useEffect(() => {}, [window.location]);
   const [clientStreamProps, setClientStreamProps] = useState<HlsStreamProps>();
+  const [streamStatus, setStreamStatus] = useState<StreamStatus>();
   const nav = useNavigate();
   const goToNextEpisode = (libName: string, episodeId: string) => {
     if (libName !== libraryId || mediaId !== episodeId) {
@@ -44,9 +45,19 @@ function MediaPlayer(props: MediaPlayerProps) {
   }
 
   React.useEffect(() => {
-    props.socket.on("createStreamCallback", (e) => {
-      setClientStreamProps(e.streamProps);
-    });
+    const timer = setInterval(async () => {
+      if (clientStreamProps) {
+        setStreamStatus(await HttpClient.heartbeatStream(clientStreamProps.id));
+      } else {
+        setStreamStatus(undefined);
+      }
+    }, Duration.seconds(1).millis);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [clientStreamProps]);
+
+  React.useEffect(() => {
     HttpClient.getEpisode(mediaId)
       .then((res) => setEpisode(res.episode))
       .catch((err) => {
@@ -54,97 +65,106 @@ function MediaPlayer(props: MediaPlayerProps) {
         goBack();
       });
     return () => {
-      props.socket.emit("cancelStream");
+      if (clientStreamProps) {
+        HttpClient.deleteStream(clientStreamProps.id);
+      }
     };
   }, []);
+
+  React.useEffect(() => {
+    if (episode) {
+      const req = {
+        library: libraryId,
+        mediaId: mediaId,
+        startOffset: 0,
+        subtitles: getSubtitles(episode),
+      };
+      console.log(`Requesting stream: ${JSON.stringify(req)}`);
+      HttpClient.createStream(req).then((it) =>
+        setClientStreamProps(it.streamProps)
+      );
+    }
+  }, [episode]);
   log.info(`Playing media ${mediaId} from ${libraryId}`);
 
   return (
     <Box sx={{ height: "100vh" }} key={window.location.pathname}>
-      {!episode ? (
+      {!episode || !clientStreamProps || streamStatus != "AVAILABLE" ? (
         <CircularProgress />
       ) : (
-        <Loading
-          waitFor={clientStreamProps}
-          render={(t) => (
-            <HlsPlayer
-              {...props}
-              hlsStreamProps={t}
-              onReloadStream={(wanted) => {
-                const req: CreateEpisodeHlsStreamRequest = {
-                  library: libraryId,
-                  mediaId: t.mediaInfo.id,
-                  subtitles: getSubtitles(episode),
-                  startOffset: wanted,
-                };
-                console.log(`Requesting stream reload: ${JSON.stringify(req)}`);
-                props.socket.emit("createStream", req);
-                setClientStreamProps(undefined);
-              }}
-              onUnmount={() => {
-                // On Unmount
-                // props.socket.emit("cancelStream");
-              }}
-              // TODO pull this ugly mess out
-              onEnded={async () => {
-                const fail = () => {
-                  nav(WebRoutes.home);
-                };
-                const currEpisode = (
-                  await HttpClient.getEpisode(t.mediaInfo.id)
-                ).episode;
-                const currSeasonEpisodes = (
-                  await HttpClient.listEpisodes(currEpisode.seasonId)
-                ).episodes.sort(episodeComparator);
-                const curEpIndex = currSeasonEpisodes.findIndex(
-                  (it) => it.id == currEpisode.id
-                );
-                const nextEpisode =
-                  curEpIndex !== -1
-                    ? currSeasonEpisodes[curEpIndex + 1]
-                    : undefined;
-
-                if (nextEpisode) {
-                  log.info(`Found next episode ${JSON.stringify(nextEpisode)}`);
-                  goToNextEpisode(t.mediaInfo.libraryName, nextEpisode.id);
-                } else {
-                  const seasons = (
-                    await HttpClient.listSeasons(currEpisode.showId)
-                  ).seasons.sort(seasonComparator);
-                  const currSeasonIndex = seasons.findIndex(
-                    (value) => value.id == currEpisode.seasonId
-                  );
-                  const nextSeason =
-                    currSeasonIndex !== -1
-                      ? seasons[currSeasonIndex + 1]
-                      : undefined;
-                  const nextSeasonFirstEpisode = nextSeason
-                    ? (await HttpClient.listEpisodes(nextSeason.id)).episodes
-                        .sort(episodeComparator)
-                        .at(0)
-                    : undefined;
-
-                  if (nextSeasonFirstEpisode) {
-                    goToNextEpisode(
-                      t.mediaInfo.libraryName,
-                      nextSeasonFirstEpisode.id
-                    );
-                  } else {
-                    fail();
-                  }
-                }
-              }}
-            />
-          )}
-          onWaitOnce={() => {
-            const req = {
+        <HlsPlayer
+          {...props}
+          hlsStreamProps={clientStreamProps}
+          onReloadStream={(wanted) => {
+            const req: CreateHlsStreamRequest = {
               library: libraryId,
-              mediaId: mediaId,
-              startOffset: 0,
+              mediaId: clientStreamProps.mediaInfo.id,
               subtitles: getSubtitles(episode),
+              startOffset: wanted,
             };
-            console.log(`Requesting stream: ${JSON.stringify(req)}`);
-            props.socket.emit("createStream", req);
+            console.log(`Requesting stream reload: ${JSON.stringify(req)}`);
+            setClientStreamProps(undefined);
+            setStreamStatus(undefined);
+            HttpClient.createStream(req).then(
+              (it: ServerRoutes.Api.Stream.CreateResponse) =>
+                setClientStreamProps(it.streamProps)
+            );
+          }}
+          onUnmount={() => {
+            // On Unmount
+            // props.socket.emit("cancelStream");
+          }}
+          // TODO pull this ugly mess out
+          onEnded={async () => {
+            const fail = () => {
+              nav(WebRoutes.home);
+            };
+            const currEpisode = (
+              await HttpClient.getEpisode(clientStreamProps.mediaInfo.id)
+            ).episode;
+            const currSeasonEpisodes = (
+              await HttpClient.listEpisodes(currEpisode.seasonId)
+            ).episodes.sort(episodeComparator);
+            const curEpIndex = currSeasonEpisodes.findIndex(
+              (it) => it.id == currEpisode.id
+            );
+            const nextEpisode =
+              curEpIndex !== -1
+                ? currSeasonEpisodes[curEpIndex + 1]
+                : undefined;
+
+            if (nextEpisode) {
+              log.info(`Found next episode ${JSON.stringify(nextEpisode)}`);
+              goToNextEpisode(
+                clientStreamProps.mediaInfo.libraryName,
+                nextEpisode.id
+              );
+            } else {
+              const seasons = (
+                await HttpClient.listSeasons(currEpisode.showId)
+              ).seasons.sort(seasonComparator);
+              const currSeasonIndex = seasons.findIndex(
+                (value) => value.id == currEpisode.seasonId
+              );
+              const nextSeason =
+                currSeasonIndex !== -1
+                  ? seasons[currSeasonIndex + 1]
+                  : undefined;
+              const nextSeasonFirstEpisode = nextSeason
+                ? (await HttpClient.listEpisodes(nextSeason.id)).episodes
+                    .sort(episodeComparator)
+                    .at(0)
+                : undefined;
+
+              if (nextSeasonFirstEpisode) {
+                goToNextEpisode(
+                  clientStreamProps.mediaInfo.libraryName,
+                  nextSeasonFirstEpisode.id
+                );
+              } else {
+                fail();
+              }
+            }
           }}
         />
       )}

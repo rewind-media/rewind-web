@@ -10,12 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { SocketClient } from "../../../models";
 import { HttpClient, UserPermissions } from "@rewind-media/rewind-protocol";
-
-export interface UserAdminSettingsProps {
-  socket: SocketClient;
-}
 
 const columns: GridColDef[] = [
   { field: "username", headerName: "Username" },
@@ -51,7 +46,7 @@ function DeleteUserDialog(props: DeleteUserDialogProps) {
   );
 }
 
-export function UserAdminSettings(props: UserAdminSettingsProps) {
+export function UserAdminSettings() {
   const [users, setUsers] = useState<Express.User[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false);
@@ -72,7 +67,6 @@ export function UserAdminSettings(props: UserAdminSettingsProps) {
           setCreateUserDialogOpen(false);
           HttpClient.listUsers().then((it) => setUsers(it.users));
         }}
-        socket={props.socket}
       />
       <DeleteUserDialog
         open={deleteUsersDialogOpen}
@@ -107,7 +101,6 @@ export function UserAdminSettings(props: UserAdminSettingsProps) {
 interface CreateUserDialogProps {
   open: boolean;
   onComplete: () => void;
-  socket: SocketClient;
 }
 
 function validate(

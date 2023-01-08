@@ -3,14 +3,11 @@ import { ButtonLink } from "../../ButtonLink";
 import { useParams } from "react-router";
 import { Typography } from "@mui/material";
 import { EpisodeLoader } from "../../loader/show/EpisodeLoader";
-import { PropsWithSocket } from "../../../models";
 import { ServerRoutes } from "@rewind-media/rewind-protocol";
 import { WebRoutes } from "../../../routes";
 import { NavBar } from "../../NavBar";
 
-export interface ShowSeasonEpisodeBrowserProps extends PropsWithSocket {}
-
-export function EpisodeBrowser(props: ShowSeasonEpisodeBrowserProps) {
+export function EpisodeBrowser() {
   const episodeId = useParams()["episodeId"];
   if (!episodeId) return <></>;
 
@@ -44,7 +41,6 @@ export function EpisodeBrowser(props: ShowSeasonEpisodeBrowserProps) {
             </>
           );
         }}
-        socket={props.socket}
       />
     </NavBar>
   );

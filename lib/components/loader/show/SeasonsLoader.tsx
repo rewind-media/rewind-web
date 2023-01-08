@@ -1,9 +1,8 @@
 import { Loading } from "../../Loading";
 import React, { ReactElement, useEffect, useState } from "react";
-import { PropsWithSocket } from "../../../models";
 import { HttpClient, SeasonInfo } from "@rewind-media/rewind-protocol";
 
-export interface SeasonsLoaderProps extends PropsWithSocket {
+export interface SeasonsLoaderProps {
   showId: string;
   onLoad: (showInfo: SeasonInfo[]) => ReactElement;
   onError?: () => void;

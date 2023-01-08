@@ -8,14 +8,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { SocketClient } from "../../models";
 import { HttpClient } from "@rewind-media/rewind-protocol";
 
-interface UserSettingsProps {
-  socket: SocketClient;
-}
-
-export function UserSettings(props: UserSettingsProps) {
+export function UserSettings() {
   const [openChangePasswordDialog, setOpenChangePasswordDialog] =
     useState(false);
   return (
@@ -28,7 +23,6 @@ export function UserSettings(props: UserSettingsProps) {
         onComplete={() => {
           setOpenChangePasswordDialog(false);
         }}
-        socket={props.socket}
       />
     </Box>
   );
@@ -37,7 +31,6 @@ export function UserSettings(props: UserSettingsProps) {
 interface ChangePasswordDialogProps {
   open: boolean;
   onComplete: () => void;
-  socket: SocketClient;
 }
 
 function validate(

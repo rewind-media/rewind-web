@@ -1,6 +1,5 @@
 import React from "react";
 import MediaPlayer from "../components/player/MediaPlayer";
-import { io } from "socket.io-client";
 import ReactDOM from "react-dom/client";
 import { Root } from "../components/Root";
 import {
@@ -23,15 +22,10 @@ import { ShowLibraryBrowser } from "../components/browser/show/ShowLibraryBrowse
 import { SeasonBrowser } from "../components/browser/show/SeasonBrowser";
 import { ShowBrowser } from "../components/browser/show/ShowBrowser";
 import { EpisodeBrowser } from "../components/browser/show/EpisodeBrowser";
-import { SocketClient } from "../models";
 import { WebRoutes } from "../routes";
 import { LibraryAdminSettings } from "../components/settings/admin/LibraryAdminSettings";
 
-export interface IndexProps {
-  io: SocketClient;
-}
-
-function Index(props: IndexProps) {
+function Index() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
@@ -44,22 +38,10 @@ function Index(props: IndexProps) {
           }
         >
           <Route index element={<Home />} />
-          <Route
-            path={WebRoutes.library}
-            element={<ShowLibraryBrowser socket={socket} />}
-          />
-          <Route
-            path={WebRoutes.show}
-            element={<ShowBrowser socket={socket} />}
-          />
-          <Route
-            path={WebRoutes.season}
-            element={<SeasonBrowser socket={socket} />}
-          />
-          <Route
-            path={WebRoutes.episode}
-            element={<EpisodeBrowser socket={socket} />}
-          />
+          <Route path={WebRoutes.library} element={<ShowLibraryBrowser />} />
+          <Route path={WebRoutes.show} element={<ShowBrowser />} />
+          <Route path={WebRoutes.season} element={<SeasonBrowser />} />
+          <Route path={WebRoutes.episode} element={<EpisodeBrowser />} />
 
           <Route
             path={WebRoutes.Settings.root}
@@ -71,10 +53,7 @@ function Index(props: IndexProps) {
           >
             {/* TODO implement settings index */}
             <Route index element={<Navigate to={WebRoutes.Settings.user} />} />
-            <Route
-              path={WebRoutes.Settings.user}
-              element={<UserSettings socket={socket} />}
-            />
+            <Route path={WebRoutes.Settings.user} element={<UserSettings />} />
             <Route
               path={WebRoutes.Settings.client}
               element={<ClientSettings />}
@@ -85,19 +64,16 @@ function Index(props: IndexProps) {
             >
               <Route
                 path={WebRoutes.Settings.Admin.users}
-                element={<UserAdminSettings socket={socket} />}
+                element={<UserAdminSettings />}
               />{" "}
               <Route
                 path={WebRoutes.Settings.Admin.libraries}
-                element={<LibraryAdminSettings socket={socket} />}
+                element={<LibraryAdminSettings />}
               />
             </Route>
           </Route>
         </Route>
-        <Route
-          path={WebRoutes.player}
-          element={<MediaPlayer socket={props.io} />}
-        />
+        <Route path={WebRoutes.player} element={<MediaPlayer />} />
         <Route path={WebRoutes.Auth.login} element={<Login />} />
       </>
     )
@@ -109,9 +85,7 @@ function Index(props: IndexProps) {
   );
 }
 
-const socket: SocketClient = io();
-
 const domRoot = document.getElementById("root") as HTMLElement;
 const root = ReactDOM.createRoot(domRoot);
 
-root.render(<Index io={socket} />);
+root.render(<Index />);

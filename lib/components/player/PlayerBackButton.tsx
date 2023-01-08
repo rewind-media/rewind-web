@@ -2,9 +2,8 @@ import { Button } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import React from "react";
 import { useNavigate } from "react-router";
-import { PropsWithSocket } from "../../models";
 
-interface PlayerBackButtonProps extends PropsWithSocket {
+interface PlayerBackButtonProps {
   openControls: boolean;
   streamId: string;
   readonly onBackButton?: () => void;
@@ -25,7 +24,6 @@ export function PlayerBackButton(props: PlayerBackButtonProps) {
         zIndex: 1,
       }}
       onClick={(e) => {
-        props.socket.emit("cancelStream");
         if (props.backButtonPath) {
           nav(props.backButtonPath);
         } else {

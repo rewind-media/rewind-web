@@ -9,10 +9,9 @@ import { PlayerBackButton } from "./PlayerBackButton";
 import { PlayerBottomBar } from "./PlayerBottomBar";
 import { WebLog } from "../../log";
 import { HlsStreamProps } from "@rewind-media/rewind-protocol";
-import { PropsWithSocket } from "../../models";
 import { Duration } from "durr";
 
-export interface HlsPlayerProps extends PropsWithSocket {
+export interface HlsPlayerProps {
   readonly hlsStreamProps: HlsStreamProps;
   readonly onReloadStream?: (wanted: number) => void;
   readonly onUnmount?: () => void;
@@ -97,8 +96,10 @@ export const HlsPlayer = (props: HlsPlayerProps) => {
       </div>
       <PlayerBackButton
         openControls={openControls}
-        socket={props.socket}
         streamId={props.hlsStreamProps.id}
+        onBackButton={() => {
+          // TODO Cancel stream
+        }}
       />
       {PlayerBottomBar({
         openControls: openControls,
