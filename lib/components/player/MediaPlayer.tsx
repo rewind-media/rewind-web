@@ -14,7 +14,6 @@ import {
 } from "@rewind-media/rewind-protocol";
 import { WebRoutes } from "../../routes";
 import { Duration } from "durr";
-import { CreateHlsStreamRequest } from "@rewind-media/rewind-protocol/dist/socket";
 
 interface MediaPlayerProps {
   readonly onBackButton?: () => void;
@@ -96,7 +95,7 @@ function MediaPlayer(props: MediaPlayerProps) {
           {...props}
           hlsStreamProps={clientStreamProps}
           onReloadStream={(wanted) => {
-            const req: CreateHlsStreamRequest = {
+            const req: ServerRoutes.Api.Stream.CreateRequest = {
               library: libraryId,
               mediaId: clientStreamProps.mediaInfo.id,
               subtitles: getSubtitles(episode),
