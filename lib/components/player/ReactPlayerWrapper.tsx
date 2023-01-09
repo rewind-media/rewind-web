@@ -3,6 +3,7 @@ import ReactPlayer from "react-player/file";
 import { WebLog } from "../../log";
 import { HlsStreamProps } from "@rewind-media/rewind-protocol";
 import FilePlayer from "react-player/file";
+import { default as Hls } from "hls.js";
 
 const log = WebLog.getChildCategory("ReactPlayerWrapper");
 
@@ -38,18 +39,19 @@ export function ReactPlayerWrapper(props: PlayerWrapperProps) {
           loop: false,
         },
         hlsOptions: {
-          backBufferLength: 60,
-          maxBufferHole: 0.5,
           subtitleDisplay: true,
         },
       }}
-      onError={(e, data) => {
+      onError={(e, data, hlsInstance: Hls) => {
         log.error(
           e,
           `Monitor ${
             props.hlsStreamProps.id
           } encountered error: ${JSON.stringify(data)}`
         );
+        if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hlsInstance.recoverMediaError();
+        }
       }}
       onProgress={(state) => {
         props.onPlayed(state.playedSeconds);
